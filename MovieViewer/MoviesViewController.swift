@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AFNetworking
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -66,13 +67,19 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let posterPath = movie["poster_path"] as! String
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
-        //let imageUrl = NSURL(string: baseUrl + posterPath)
+        let imageUrl = NSURL(string: baseUrl + posterPath)
         
         //setImageWithURL() - from cocoapods AFNetworking
+        cell.movieImageView.setImageWithURL(imageUrl!)
         
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
         return cell
+    }
+    
+    //style the status bar
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
     }
 
     
