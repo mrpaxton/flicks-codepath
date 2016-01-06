@@ -8,6 +8,8 @@
 
 import UIKit
 import AFNetworking
+import SwiftLoader
+
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -29,6 +31,16 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
         
+        
+        //setup a progress bar
+        var config : SwiftLoader.Config = SwiftLoader.Config()
+        config.size = 150
+        config.spinnerColor = .redColor()
+        config.foregroundColor = .blackColor()
+        config.foregroundAlpha = 0.5
+        //set new config for SwiftLoader
+        SwiftLoader.setConfig(config)
+        
         //network call
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
@@ -39,8 +51,18 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             delegateQueue:NSOperationQueue.mainQueue()
         )
         
+        //delay to see the effect on the simulator
+        delay(2.0) {
+            SwiftLoader.show(title: "Loading...", animated: true)
+        }
+        
         let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
+                //delay to see the effect on the simulator
+                self.delay(5.0) {
+                    SwiftLoader.hide()
+                }
+
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
@@ -52,6 +74,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
         });
         task.resume()
+        
     }
     
     //callboack for UIRefreshControl
