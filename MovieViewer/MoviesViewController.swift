@@ -11,16 +11,15 @@ import AFNetworking
 import SwiftLoader
 
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class MoviesViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var movieSearchBar: UISearchBar!
     var movies: [NSDictionary]?
+    var filteredMovies: [NSDictionary]?
     
     //UIRefreshControl - for pull to refresh
     var refreshControl: UIRefreshControl!
-    
-    var filteredMovies: [NSDictionary]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,21 +33,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         //add the UIRefershControl to the table view
         refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self,
+            action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
         
+        setupProgressBar()
+        setupMoviesData()
         
-        
-        
-        //setup a progress bar
-        var config : SwiftLoader.Config = SwiftLoader.Config()
-        config.size = 150
-        config.spinnerColor = .redColor()
-        config.foregroundColor = .blackColor()
-        config.foregroundAlpha = 0.5
-        //set new config for SwiftLoader
-        SwiftLoader.setConfig(config)
-        
+    }
+    
+    //private helper: setup data of movies from api call
+    func setupMoviesData() {
         //network call
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
@@ -60,22 +55,16 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         )
         
         //delay to see the effect on the simulator
-        delay(2.0) {
-            SwiftLoader.show(title: "Loading...", animated: true)
-        }
+        delay(1.0) { SwiftLoader.show(title: "Loading...", animated: true) }
         
         let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
                 //delay to see the effect on the simulator
-                self.delay(5.0) {
-                    SwiftLoader.hide()
-                }
-
+                self.delay(3.0) { SwiftLoader.hide() }
+                
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
-                            print("response: \(responseDictionary)")
-                            
                             self.movies = responseDictionary["results"] as? [NSDictionary]
                             self.filteredMovies = responseDictionary["results"] as? [NSDictionary]
                             self.tableView.reloadData()
@@ -83,22 +72,19 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
         });
         task.resume()
-        
     }
     
-    //search bar delegate
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-//        filteredData = searchText.isEmpty ? data : data.filter({(dataString: String) -> Bool in
-//                return dataString.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
-//        })
-        
-        filteredMovies = searchText.isEmpty ? filteredMovies : filteredMovies!.filter( { ($0["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil } )
-            
-//            filter { $0["title"]!.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil }
-        print("text did change")
-        print(filteredMovies!.map { $0["title"] } )
-        tableView.reloadData()
-        
+    //private helper: setup and config a SwiftLoader progress bar
+    func setupProgressBar() {
+        var config : SwiftLoader.Config = SwiftLoader.Config()
+        config.size = 120
+        config.spinnerColor = .redColor()
+        config.foregroundColor = .blackColor()
+        config.foregroundAlpha = 0.7
+        //set new config for SwiftLoader
+        SwiftLoader.setConfig(config)
+        //** Note: SwiftLoader is not updated for the new version of Swift. 
+        //** I modified the library a little
     }
     
     //callboack for UIRefreshControl
@@ -108,7 +94,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         })
     }
     
-    //private helper for the refresh control
+    //private helper:delay for the refresh control and progress bar
     func delay(delay:Double, closure: () -> ()) {
         dispatch_after(
             dispatch_time(
@@ -118,12 +104,31 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             dispatch_get_main_queue(), closure
         )
     }
+    
+    //style the status bar
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}
+
+
+extension MoviesViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let filteredMovies = filteredMovies else {
             return 0
@@ -149,22 +154,15 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         cell.overviewLabel.text = overview
         return cell
     }
-    
-    //style the status bar
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
+
+}
+
+extension MoviesViewController: UISearchBarDelegate {
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredMovies = searchText.isEmpty ? filteredMovies :
+            filteredMovies!.filter({
+                ($0["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+            })
+        tableView.reloadData()
     }
-
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
