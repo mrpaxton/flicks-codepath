@@ -24,22 +24,23 @@ class MoviesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // movie tableView
+        // set delegates and datasources
         tableView.dataSource = self
         tableView.delegate = self
-        
-        //searchBarDelegate
         movieSearchBar.delegate = self
         
-        //add the UIRefershControl to the table view
+        pullRefreshControl()
+        setupProgressBar()
+        setupMoviesData()
+    }
+    
+    //private helper: pull to refresh control. Add the UIRefershControl to the table view
+    func pullRefreshControl() {
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self,
             action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
-        
-        setupProgressBar()
-        setupMoviesData()
-        
+
     }
     
     //private helper: setup data of movies from api call
@@ -124,7 +125,6 @@ class MoviesViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
 }
 
 
@@ -146,10 +146,15 @@ extension MoviesViewController: UITableViewDataSource, UITableViewDelegate {
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
+        let request = NSURLRequest(URL: imageUrl!)
+        let placeholderImage = UIImage(named: "MovieHolder")
         
         //setImageWithURL() - from cocoapods AFNetworking
-        cell.movieImageView.setImageWithURL(imageUrl!)
+        //cell.movieImageView.setImageWithURL(imageUrl!) - without fadein effect
         
+        cell.movieImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
+            UIView.transitionWithView(cell.movieImageView, duration: 0.19, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { cell.movieImageView.image = imageData }, completion: nil   )
+            }, failure: nil)
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
         return cell
