@@ -14,12 +14,20 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var tableView: UITableView!
     var movies: [NSDictionary]?
     
+    //UIRefreshControl - for pull to refresh
+    var refreshControl: UIRefreshControl!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         tableView.dataSource = self
         tableView.delegate = self
+        
+        //add the UIRefershControl to the table view
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
         
         //network call
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
@@ -44,6 +52,24 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
         });
         task.resume()
+    }
+    
+    //callboack for UIRefreshControl
+    func onRefresh() {
+        delay(2, closure: {
+            self.refreshControl.endRefreshing()
+        })
+    }
+    
+    //private helper for the refresh control
+    func delay(delay:Double, closure: () -> ()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC) )
+            ),
+            dispatch_get_main_queue(), closure
+        )
     }
 
     override func didReceiveMemoryWarning() {
