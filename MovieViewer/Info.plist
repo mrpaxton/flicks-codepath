@@ -38,9 +38,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    <key>NSAppTransportSecurity</key>
+    
+   
+    <key>NSExceptionDomains</key>
     <dict>
-        <key>NSAllowsArbitraryLoads</key><true/>
+        <key>api.themoviedb.org</key>
+        <dict>
+            <key>NSExceptionAllowsInsecureHTTPLoads</key>
+            <true/>
+        </dict>
     </dict>
+ 
 </dict>
 </plist>

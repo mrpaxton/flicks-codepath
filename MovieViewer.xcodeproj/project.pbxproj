@@ -14,6 +14,8 @@
 		D0488F241C3C937000A17EF5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0488F221C3C937000A17EF5 /* LaunchScreen.storyboard */; };
 		D0488F2C1C3C942800A17EF5 /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0488F2B1C3C942800A17EF5 /* MoviesViewController.swift */; };
 		D0488F2F1C3C970C00A17EF5 /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0488F2E1C3C970C00A17EF5 /* MovieCell.swift */; };
+		D0A530781C3E643C00CDF636 /* MovieCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A530771C3E643C00CDF636 /* MovieCollectionCell.swift */; };
+		D0A5307A1C3E65B500CDF636 /* MoviesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A530791C3E65B500CDF636 /* MoviesCollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		D0488F251C3C937000A17EF5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0488F2B1C3C942800A17EF5 /* MoviesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesViewController.swift; sourceTree = "<group>"; };
 		D0488F2E1C3C970C00A17EF5 /* MovieCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
+		D0A530771C3E643C00CDF636 /* MovieCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCollectionCell.swift; sourceTree = "<group>"; };
+		D0A530791C3E65B500CDF636 /* MoviesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesCollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +91,7 @@
 				D0488F221C3C937000A17EF5 /* LaunchScreen.storyboard */,
 				D0488F251C3C937000A17EF5 /* Info.plist */,
 				D0488F2B1C3C942800A17EF5 /* MoviesViewController.swift */,
+				D0A530791C3E65B500CDF636 /* MoviesCollectionViewController.swift */,
 			);
 			path = MovieViewer;
 			sourceTree = "<group>";
@@ -95,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				D0488F2E1C3C970C00A17EF5 /* MovieCell.swift */,
+				D0A530771C3E643C00CDF636 /* MovieCollectionCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -222,6 +228,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0A530781C3E643C00CDF636 /* MovieCollectionCell.swift in Sources */,
+				D0A5307A1C3E65B500CDF636 /* MoviesCollectionViewController.swift in Sources */,
 				D0488F1A1C3C937000A17EF5 /* AppDelegate.swift in Sources */,
 				D0488F2C1C3C942800A17EF5 /* MoviesViewController.swift in Sources */,
 				D0488F2F1C3C970C00A17EF5 /* MovieCell.swift in Sources */,

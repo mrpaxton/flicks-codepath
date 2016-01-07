@@ -23,23 +23,6 @@ class MoviesViewController: UIViewController {
     
     @IBOutlet weak var networkErrorView: UIView!
     
-    func toggleNetworkErrorView( visible: Bool) {
-        //insert below searchbar and above tableview
-        if visible {
-            networkErrorView.hidden = false
-            UIView.animateWithDuration(0.5, delay: 0.1, options: .CurveEaseOut, animations: {
-                //            var errorFrame = self.networkErrorView.frame
-                //            errorFrame.origin.y += errorFrame.size.height //animate to original position
-                //            self.networkErrorView.frame = errorFrame
-                self.view.bringSubviewToFront(self.networkErrorView)
-                self.tableView.frame.origin.y += self.movieSearchBar.frame.height
-                }, completion: nil
-            )
-            
-        } else {
-            networkErrorView.hidden = true
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -132,6 +115,21 @@ class MoviesViewController: UIViewController {
             dispatch_get_main_queue(), closure
         )
     }
+    
+    func toggleNetworkErrorView( visible: Bool) {
+        //insert below searchbar and above tableview
+        if visible {
+            networkErrorView.hidden = false
+            UIView.animateWithDuration(0.5, delay: 0.1, options: .CurveEaseOut, animations: {                self.view.bringSubviewToFront(self.networkErrorView)
+                self.tableView.frame.origin.y += self.movieSearchBar.frame.height
+                }, completion: nil
+            )
+            
+        } else {
+            networkErrorView.hidden = true
+        }
+    }
+
     
     //style the status bar
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
