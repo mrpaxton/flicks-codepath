@@ -21,6 +21,26 @@ class MoviesViewController: UIViewController {
     //UIRefreshControl - for pull to refresh
     var refreshControl: UIRefreshControl!
     
+    @IBOutlet weak var networkErrorView: UIView!
+    
+    func toggleNetworkErrorView( visible: Bool) {
+        //insert below searchbar and above tableview
+        if visible {
+            networkErrorView.hidden = false
+            UIView.animateWithDuration(0.5, delay: 0.1, options: .CurveEaseOut, animations: {
+                //            var errorFrame = self.networkErrorView.frame
+                //            errorFrame.origin.y += errorFrame.size.height //animate to original position
+                //            self.networkErrorView.frame = errorFrame
+                self.view.bringSubviewToFront(self.networkErrorView)
+                self.tableView.frame.origin.y += self.movieSearchBar.frame.height
+                }, completion: nil
+            )
+            
+        } else {
+            networkErrorView.hidden = true
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,6 +52,8 @@ class MoviesViewController: UIViewController {
         pullRefreshControl()
         setupProgressBar()
         setupMoviesData()
+        
+        toggleNetworkErrorView(false)
     }
     
     //private helper: pull to refresh control. Add the UIRefershControl to the table view
@@ -70,6 +92,11 @@ class MoviesViewController: UIViewController {
                             self.filteredMovies = responseDictionary["results"] as? [NSDictionary]
                             self.tableView.reloadData()
                     }
+                }
+                
+                if error != nil {
+                    //show network error message box
+                    self.toggleNetworkErrorView(true)
                 }
         });
         task.resume()
