@@ -164,10 +164,24 @@ extension MoviesViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension MoviesViewController: UISearchBarDelegate {
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        filteredMovies = searchText.isEmpty ? filteredMovies :
-            filteredMovies!.filter({
-                ($0["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
-            })
+        searchBar.setShowsCancelButton(true, animated: true)
+        if !searchText.isEmpty {
+            filteredMovies = searchText.isEmpty ? filteredMovies :
+                filteredMovies!.filter({
+                    ($0["title"] as! String).rangeOfString(searchText,
+                        options: .CaseInsensitiveSearch) != nil
+                })
+            tableView.reloadData()
+        } else {
+            filteredMovies = movies
+            tableView.reloadData()
+            searchBar.endEditing(true)
+        }
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        filteredMovies = movies
+        searchBar.text = ""
         tableView.reloadData()
     }
 }
