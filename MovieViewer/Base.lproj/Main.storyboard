@@ -51,7 +51,7 @@
                                             </subviews>
                                             <color key="backgroundColor" red="0.58850184476827727" green="1" blue="0.7952846767002657" alpha="0.48999999999999999" colorSpace="calibratedRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.77870253003639667" green="0.1816323814639583" blue="0.81788496172828284" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <outlet property="movieImageView" destination="s4K-Z4-lw2" id="ivt-eU-dTJ"/>
                                             <outlet property="overviewLabel" destination="FPm-X2-Zug" id="dmC-29-vkT"/>
