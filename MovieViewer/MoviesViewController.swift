@@ -167,10 +167,11 @@ extension MoviesViewController: UITableViewDataSource, UITableViewDelegate {
         let movie = filteredMovies![indexPath.row]
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
-        let posterPath = movie["poster_path"] as! String
+        
+        let posterPath = movie["poster_path"]
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
-        let imageUrl = NSURL(string: baseUrl + posterPath)
+        let imageUrl = NSURL(string: baseUrl + (posterPath as? String ?? "") )
         let request = NSURLRequest(URL: imageUrl!)
         let placeholderImage = UIImage(named: "MovieHolder")
         
