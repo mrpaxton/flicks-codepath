@@ -11,8 +11,8 @@ import AFNetworking
 import SwiftLoader
 
 
-class MoviesViewController: UIViewController {
-
+class MoviesTabViewController: UIViewController {
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var movieSearchBar: UISearchBar!
     var movies: [NSDictionary]?
@@ -26,7 +26,7 @@ class MoviesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // set delegates and datasources
         tableView.dataSource = self
         tableView.delegate = self
@@ -45,7 +45,7 @@ class MoviesViewController: UIViewController {
         refreshControl.addTarget(self,
             action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
-
+        
     }
     
     //private helper: setup data of movies from api call
@@ -94,7 +94,7 @@ class MoviesViewController: UIViewController {
         config.foregroundAlpha = 0.7
         //set new config for SwiftLoader
         SwiftLoader.setConfig(config)
-        //** Note: SwiftLoader is not updated for the new version of Swift. 
+        //** Note: SwiftLoader is not updated for the new version of Swift.
         //** I modified the library a little
     }
     
@@ -120,7 +120,8 @@ class MoviesViewController: UIViewController {
         //insert below searchbar and above tableview
         if visible {
             networkErrorView.hidden = false
-            UIView.animateWithDuration(0.5, delay: 0.1, options: .CurveEaseOut, animations: {                self.view.bringSubviewToFront(self.networkErrorView)
+            UIView.animateWithDuration(0.5, delay: 0.1, options: .CurveEaseOut, animations: {
+                self.view.bringSubviewToFront(self.networkErrorView)
                 self.tableView.frame.origin.y += self.movieSearchBar.frame.height
                 }, completion: nil
             )
@@ -129,13 +130,13 @@ class MoviesViewController: UIViewController {
             networkErrorView.hidden = true
         }
     }
-
+    
     
     //style the status bar
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -143,17 +144,17 @@ class MoviesViewController: UIViewController {
     
     /*
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // Get the new view controller using segue.destinationViewController.
+    // Pass the selected object to the new view controller.
     }
     */
 }
 
 
-extension MoviesViewController: UITableViewDataSource, UITableViewDelegate {
+extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let filteredMovies = filteredMovies else {
             return 0
@@ -183,20 +184,23 @@ extension MoviesViewController: UITableViewDataSource, UITableViewDelegate {
             }, failure: nil)
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
+        cell.backgroundColor = UIColor(hexString: "#f47920bb")
         return cell
     }
-
+    
 }
 
-extension MoviesViewController: UISearchBarDelegate {
+extension MoviesTabViewController: UISearchBarDelegate {
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         searchBar.setShowsCancelButton(true, animated: true)
         if !searchText.isEmpty {
-            filteredMovies = searchText.isEmpty ? filteredMovies :
-                filteredMovies!.filter({
-                    ($0["title"] as! String).rangeOfString(searchText,
-                        options: .CaseInsensitiveSearch) != nil
-                })
+            //TODO: when didBackwardDelete, re-filter the movie list and reload the table
+            
+            
+            filteredMovies = filteredMovies!.filter({
+                ($0["title"] as! String).rangeOfString(searchText,
+                    options: .CaseInsensitiveSearch) != nil
+            })
             tableView.reloadData()
         } else {
             filteredMovies = movies
@@ -211,3 +215,5 @@ extension MoviesViewController: UISearchBarDelegate {
         tableView.reloadData()
     }
 }
+
+

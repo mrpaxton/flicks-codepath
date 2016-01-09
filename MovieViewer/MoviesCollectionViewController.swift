@@ -47,6 +47,7 @@ extension MoviesCollectionViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MovieCollectionCell", forIndexPath: indexPath) as! MovieCollectionCell
         cell.titleLabel.text = "555"
         cell.cellImageView.image = UIImage(named: "MovieHolder")
+        cell.backgroundColor = UIColor(hexString: "#f47920bb")
         return cell
     }
 }
