@@ -61,12 +61,12 @@ class MoviesTabViewController: UIViewController {
         )
         
         //delay to see the effect on the simulator
-        delay(1.0) { SwiftLoader.show(title: "Loading...", animated: true) }
+        delay(3.0) { SwiftLoader.show(title: "Loading...", animated: true) }
         
         let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
                 //delay to see the effect on the simulator
-                self.delay(3.0) { SwiftLoader.hide() }
+                self.delay(4.0) { SwiftLoader.hide() }
                 
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
@@ -91,7 +91,7 @@ class MoviesTabViewController: UIViewController {
         config.size = 120
         config.spinnerColor = .redColor()
         config.foregroundColor = .blackColor()
-        config.foregroundAlpha = 0.7
+        config.foregroundAlpha = 0.9
         //set new config for SwiftLoader
         SwiftLoader.setConfig(config)
         //** Note: SwiftLoader is not updated for the new version of Swift.
@@ -179,6 +179,7 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         //setImageWithURL() - from cocoapods AFNetworking
         //cell.movieImageView.setImageWithURL(imageUrl!) - without fadein effect
         
+        //fade-in effect on movie images
         cell.movieImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
             UIView.transitionWithView(cell.movieImageView, duration: 0.19, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { cell.movieImageView.image = imageData }, completion: nil   )
             }, failure: nil)

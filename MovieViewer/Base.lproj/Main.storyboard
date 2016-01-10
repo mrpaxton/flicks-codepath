@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
     </dependencies>
     <scenes>
-        <!--Item 2-->
+        <!--TV Shows-->
         <scene sceneID="okA-1o-ohT">
             <objects>
                 <viewController id="qcs-Rb-2uy" customClass="MoviesCollectionViewController" customModule="MovieViewer" customModuleProvider="target" sceneMemberID="viewController">
@@ -54,7 +54,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item 2" id="lIY-se-CSr"/>
+                    <tabBarItem key="tabBarItem" title="TV Shows" image="TvIcon" id="lIY-se-CSr">
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
+                    </tabBarItem>
                     <connections>
                         <outlet property="collectionView" destination="E4l-4B-xgU" id="02Z-Co-sU5"/>
                     </connections>
@@ -63,7 +65,7 @@
             </objects>
             <point key="canvasLocation" x="171" y="-263"/>
         </scene>
-        <!--Item 1-->
+        <!--Movies-->
         <scene sceneID="Mv8-ng-QcK">
             <objects>
                 <viewController id="Ohg-Ui-cQb" customClass="MoviesTabViewController" customModule="MovieViewer" customModuleProvider="target" sceneMemberID="viewController">
@@ -80,7 +82,7 @@
                                         <rect key="frame" x="0.0" y="28" width="402" height="143"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mLd-dy-UB1" id="bUy-F8-MFJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="402" height="142.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="402" height="143"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lch-Wg-zX1">
@@ -98,7 +100,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="SgU-H9-e36">
-                                                    <rect key="frame" x="8" y="12" width="108" height="118"/>
+                                                    <rect key="frame" x="0.0" y="-9" width="122" height="152"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
@@ -134,7 +136,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item 1" id="daO-iQ-Cco"/>
+                    <tabBarItem key="tabBarItem" title="Movies" image="MovieIcon" id="daO-iQ-Cco">
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
+                    </tabBarItem>
                     <connections>
                         <outlet property="movieSearchBar" destination="Bj6-02-xBV" id="cPc-P6-JVM"/>
                         <outlet property="networkErrorView" destination="fpA-vr-vj9" id="kmW-jP-K6i"/>
@@ -164,4 +168,8 @@
             <point key="canvasLocation" x="-369" y="-577"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="MovieIcon" width="25" height="25"/>
+        <image name="TvIcon" width="25" height="25"/>
+    </resources>
 </document>
