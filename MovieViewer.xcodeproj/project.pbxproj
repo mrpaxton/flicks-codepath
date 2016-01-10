@@ -17,6 +17,8 @@
 		D04D23A21C419BB9004EE84A /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04D23A11C419BB9004EE84A /* ColorExtension.swift */; };
 		D0A530781C3E643C00CDF636 /* MovieCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A530771C3E643C00CDF636 /* MovieCollectionCell.swift */; };
 		D0A5307A1C3E65B500CDF636 /* MoviesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A530791C3E65B500CDF636 /* MoviesCollectionViewController.swift */; };
+		D0DB54A81C424D92001C5197 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DB54A71C424D92001C5197 /* Movie.swift */; };
+		D0E43A941C425F730045534D /* ShowDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E43A931C425F730045534D /* ShowDetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		D04D23A11C419BB9004EE84A /* ColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		D0A530771C3E643C00CDF636 /* MovieCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCollectionCell.swift; sourceTree = "<group>"; };
 		D0A530791C3E65B500CDF636 /* MoviesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesCollectionViewController.swift; sourceTree = "<group>"; };
+		D0DB54A71C424D92001C5197 /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		D0E43A931C425F730045534D /* ShowDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowDetailsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +99,8 @@
 				D0A530791C3E65B500CDF636 /* MoviesCollectionViewController.swift */,
 				D04D239F1C419775004EE84A /* MoviesTabViewController.swift */,
 				D04D23A11C419BB9004EE84A /* ColorExtension.swift */,
+				D0DB54A71C424D92001C5197 /* Movie.swift */,
+				D0E43A931C425F730045534D /* ShowDetailsViewController.swift */,
 			);
 			path = MovieViewer;
 			sourceTree = "<group>";
@@ -231,6 +237,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0E43A941C425F730045534D /* ShowDetailsViewController.swift in Sources */,
+				D0DB54A81C424D92001C5197 /* Movie.swift in Sources */,
 				D0A530781C3E643C00CDF636 /* MovieCollectionCell.swift in Sources */,
 				D0A5307A1C3E65B500CDF636 /* MoviesCollectionViewController.swift in Sources */,
 				D0488F1A1C3C937000A17EF5 /* AppDelegate.swift in Sources */,

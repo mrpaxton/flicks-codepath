@@ -23,6 +23,8 @@ class MoviesTabViewController: UIViewController {
     
     @IBOutlet weak var networkErrorView: UIView!
     
+    var movieList:  [Movie] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,12 +63,12 @@ class MoviesTabViewController: UIViewController {
         )
         
         //delay to see the effect on the simulator
-        delay(3.0) { SwiftLoader.show(title: "Loading...", animated: true) }
+        delay(1.0) { SwiftLoader.show(title: "Loading...", animated: true) }
         
         let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
                 //delay to see the effect on the simulator
-                self.delay(4.0) { SwiftLoader.hide() }
+                self.delay(3.0) { SwiftLoader.hide() }
                 
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
@@ -74,6 +76,18 @@ class MoviesTabViewController: UIViewController {
                             self.movies = responseDictionary["results"] as? [NSDictionary]
                             self.filteredMovies = responseDictionary["results"] as? [NSDictionary]
                             self.tableView.reloadData()
+                            
+                            //build a list of Movies
+                            for movie in self.movies! {
+                                let id = movie["id"] as! Int
+                                let title = movie["title"] as! String
+                                let overview = movie["overview"] as! String
+                                let posterPath = movie["poster_path"] as? String
+                                let voteAverage = movie["vote_average"] as? Float
+                                let releaseDate = movie["release_date"] as? NSDate
+                                let currentMovie = Movie( id: id, title: title, overview: overview, posterPath: posterPath, voteAverage: voteAverage, releaseDate: releaseDate)
+                                self.movieList.append( currentMovie )
+                            }
                     }
                 }
                 
@@ -83,6 +97,7 @@ class MoviesTabViewController: UIViewController {
                 }
         });
         task.resume()
+        
     }
     
     //private helper: setup and config a SwiftLoader progress bar
@@ -142,15 +157,18 @@ class MoviesTabViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    /*
+
     // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
+        if segue.identifier == "movieSegue" {
+            
+            let chosenIndex = self.tableView.indexPathForCell(sender as! MovieCell)
+            
+            if let showDetailsVC = segue.destinationViewController as? ShowDetailsViewController {
+                showDetailsVC.item = movieList[chosenIndex!.row]
+            }
+        }
     }
-    */
 }
 
 
@@ -176,6 +194,7 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         let request = NSURLRequest(URL: imageUrl!)
         let placeholderImage = UIImage(named: "MovieHolder")
         
+        
         //setImageWithURL() - from cocoapods AFNetworking
         //cell.movieImageView.setImageWithURL(imageUrl!) - without fadein effect
         
@@ -196,7 +215,6 @@ extension MoviesTabViewController: UISearchBarDelegate {
         searchBar.setShowsCancelButton(true, animated: true)
         if !searchText.isEmpty {
             //TODO: when didBackwardDelete, re-filter the movie list and reload the table
-            
             
             filteredMovies = filteredMovies!.filter({
                 ($0["title"] as! String).rangeOfString(searchText,
