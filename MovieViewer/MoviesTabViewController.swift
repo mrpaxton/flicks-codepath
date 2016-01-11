@@ -13,7 +13,9 @@ import SwiftLoader
 
 class MoviesTabViewController: UIViewController {
     
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet var tableView: UITableView!
+    @IBOutlet var collectionView: UICollectionView!
+    
     @IBOutlet weak var movieSearchBar: UISearchBar!
     var movies: [NSDictionary]?
     var filteredMovies: [NSDictionary]?
@@ -22,8 +24,25 @@ class MoviesTabViewController: UIViewController {
     var refreshControl: UIRefreshControl!
     
     @IBOutlet weak var networkErrorView: UIView!
+    @IBOutlet weak var swapViewBarButton: UIBarButtonItem!
     
     var movieList:  [Movie] = []
+    
+    
+    @IBAction func onSwapViewBarButtonTouched(sender: UIBarButtonItem) {
+        var fromView: UIView!
+        var toView: UIView!
+        
+        if self.tableView?.superview == self.view {
+            (fromView, toView) = (self.tableView, self.collectionView)
+        } else {
+            (fromView, toView) = (self.collectionView, self.tableView)
+        }
+        
+        toView?.frame = fromView.frame
+        UIView.transitionFromView(fromView, toView: toView,
+            duration: 0.15, options: UIViewAnimationOptions.TransitionFlipFromRight, completion: nil)
+    }
     
     
     override func viewDidLoad() {
@@ -33,6 +52,7 @@ class MoviesTabViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         movieSearchBar.delegate = self
+        collectionView.dataSource = self
         
         pullRefreshControl()
         setupProgressBar()
@@ -47,7 +67,6 @@ class MoviesTabViewController: UIViewController {
         refreshControl.addTarget(self,
             action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
-        
     }
     
     //private helper: setup data of movies from api call
@@ -85,7 +104,9 @@ class MoviesTabViewController: UIViewController {
                                 let posterPath = movie["poster_path"] as? String
                                 let voteAverage = movie["vote_average"] as? Float
                                 let releaseDate = movie["release_date"] as? NSDate
-                                let currentMovie = Movie( id: id, title: title, overview: overview, posterPath: posterPath, voteAverage: voteAverage, releaseDate: releaseDate)
+                                let currentMovie = Movie( id: id, title: title,
+                                    overview: overview, posterPath: posterPath,
+                                    voteAverage: voteAverage, releaseDate: releaseDate)
                                 self.movieList.append( currentMovie )
                             }
                     }
@@ -97,7 +118,6 @@ class MoviesTabViewController: UIViewController {
                 }
         });
         task.resume()
-        
     }
     
     //private helper: setup and config a SwiftLoader progress bar
@@ -140,12 +160,10 @@ class MoviesTabViewController: UIViewController {
                 self.tableView.frame.origin.y += self.movieSearchBar.frame.height
                 }, completion: nil
             )
-            
         } else {
             networkErrorView.hidden = true
         }
     }
-    
     
     //style the status bar
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
@@ -156,7 +174,6 @@ class MoviesTabViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
     // MARK: - Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -200,14 +217,13 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         
         //fade-in effect on movie images
         cell.movieImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
-            UIView.transitionWithView(cell.movieImageView, duration: 0.19, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { cell.movieImageView.image = imageData }, completion: nil   )
+            UIView.transitionWithView(cell.movieImageView, duration: 0.15, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { cell.movieImageView.image = imageData }, completion: nil   )
             }, failure: nil)
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
-        cell.backgroundColor = UIColor(hexString: "#f47920bb")
+        cell.backgroundColor = UIColor(hexString: "#f47920ee")
         return cell
     }
-    
 }
 
 extension MoviesTabViewController: UISearchBarDelegate {
@@ -234,5 +250,20 @@ extension MoviesTabViewController: UISearchBarDelegate {
         tableView.reloadData()
     }
 }
+
+extension MoviesTabViewController: UICollectionViewDataSource {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 20
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MovieCollectionCell", forIndexPath: indexPath) as! MovieCollectionCell
+        cell.titleLabel.text = "555"
+        cell.cellImageView.image = UIImage(named: "MovieHolder")
+        cell.backgroundColor = UIColor(hexString: "#f47920bb")
+        return cell
+    }
+}
+
 
 

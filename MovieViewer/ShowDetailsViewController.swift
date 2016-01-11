@@ -28,7 +28,7 @@ class ShowDetailsViewController: UIViewController {
         poster!.setImageWithURL(imageUrl!)
         
         //set background color of the image view
-        self.view.backgroundColor = UIColor(hexString: "#f47920bb")
+        self.view.backgroundColor = UIColor(hexString: "#f4792099")
         
         
     }
