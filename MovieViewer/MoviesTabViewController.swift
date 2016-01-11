@@ -18,7 +18,7 @@ class MoviesTabViewController: UIViewController {
     
     @IBOutlet weak var movieSearchBar: UISearchBar!
     var movies: [NSDictionary]?
-    var filteredMovies: [NSDictionary]?
+    
     
     //UIRefreshControl - for pull to refresh
     var refreshControl: UIRefreshControl!
@@ -27,6 +27,7 @@ class MoviesTabViewController: UIViewController {
     @IBOutlet weak var swapViewBarButton: UIBarButtonItem!
     
     var movieList:  [Movie] = []
+    var filteredMovies: [Movie] = []
     
     
     @IBAction func onSwapViewBarButtonTouched(sender: UIBarButtonItem) {
@@ -93,8 +94,6 @@ class MoviesTabViewController: UIViewController {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
                             self.movies = responseDictionary["results"] as? [NSDictionary]
-                            self.filteredMovies = responseDictionary["results"] as? [NSDictionary]
-                            self.tableView.reloadData()
                             
                             //build a list of Movies
                             for movie in self.movies! {
@@ -108,7 +107,11 @@ class MoviesTabViewController: UIViewController {
                                     overview: overview, posterPath: posterPath,
                                     voteAverage: voteAverage, releaseDate: releaseDate)
                                 self.movieList.append( currentMovie )
+                                self.filteredMovies.append( currentMovie )
                             }
+                            
+                            self.tableView.reloadData()
+                            self.collectionView.reloadData()
                     }
                 }
                 
@@ -191,24 +194,29 @@ class MoviesTabViewController: UIViewController {
 
 extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let filteredMovies = filteredMovies else {
-            return 0
-        }
-        return filteredMovies.count
+//        guard let filteredMovies = filteredMovies else {
+//            return 0
+//        }
+        
+        return self.filteredMovies.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
         
-        let movie = filteredMovies![indexPath.row]
-        let title = movie["title"] as! String
-        let overview = movie["overview"] as! String
-        
-        let posterPath = movie["poster_path"]
+        let movie = filteredMovies[indexPath.row]
+        return movieToTableViewCell(movie, cell: cell)
+    }
+    
+    func movieToTableViewCell(movie: Movie, cell: MovieCell) -> UITableViewCell {
+        let title = movie.title
+        let overview = movie.overview
+        let posterPath = movie.posterPath
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
-        let imageUrl = NSURL(string: baseUrl + (posterPath as? String ?? "") )
+        let imageUrl = NSURL(string: baseUrl + (posterPath ?? "") )
         let request = NSURLRequest(URL: imageUrl!)
+        
         let placeholderImage = UIImage(named: "MovieHolder")
         
         
@@ -224,6 +232,8 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         cell.backgroundColor = UIColor(hexString: "#f47920ee")
         return cell
     }
+    
+
 }
 
 extension MoviesTabViewController: UISearchBarDelegate {
@@ -232,20 +242,20 @@ extension MoviesTabViewController: UISearchBarDelegate {
         if !searchText.isEmpty {
             //TODO: when didBackwardDelete, re-filter the movie list and reload the table
             
-            filteredMovies = filteredMovies!.filter({
-                ($0["title"] as! String).rangeOfString(searchText,
+            filteredMovies = filteredMovies.filter({
+                ($0.title)!.rangeOfString(searchText,
                     options: .CaseInsensitiveSearch) != nil
             })
             tableView.reloadData()
         } else {
-            filteredMovies = movies
+            filteredMovies = movieList
             tableView.reloadData()
             searchBar.endEditing(true)
         }
     }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        filteredMovies = movies
+        filteredMovies = movieList
         searchBar.text = ""
         tableView.reloadData()
     }
@@ -253,14 +263,36 @@ extension MoviesTabViewController: UISearchBarDelegate {
 
 extension MoviesTabViewController: UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        return self.filteredMovies.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MovieCollectionCell", forIndexPath: indexPath) as! MovieCollectionCell
-        cell.titleLabel.text = "555"
-        cell.cellImageView.image = UIImage(named: "MovieHolder")
-        cell.backgroundColor = UIColor(hexString: "#f47920bb")
+        let movie = filteredMovies[indexPath.row]
+        return movieToCollectionViewCell(movie , cell: cell)
+    }
+    
+    func movieToCollectionViewCell(movie: Movie, cell: MovieCollectionCell) -> UICollectionViewCell {
+        let title = movie.title
+        let posterPath = movie.posterPath
+        
+        let baseUrl = "http://image.tmdb.org/t/p/w500"
+        let imageUrl = NSURL(string: baseUrl + (posterPath ?? "") )
+        let request = NSURLRequest(URL: imageUrl!)
+        
+        let placeholderImage = UIImage(named: "MovieHolder")
+        
+        
+        //setImageWithURL() - from cocoapods AFNetworking
+        //cell.movieImageView.setImageWithURL(imageUrl!) - without fadein effect
+        
+        //fade-in effect on movie images
+        cell.cellImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
+            UIView.transitionWithView(cell.cellImageView, duration: 0.15, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { cell.cellImageView.image = imageData }, completion: nil   )
+            }, failure: nil)
+        cell.titleLabel.text = title
+        //cell.overviewLabel.text = overview
+        cell.backgroundColor = UIColor(hexString: "#f47920ee")
         return cell
     }
 }
