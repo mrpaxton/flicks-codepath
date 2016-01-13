@@ -247,9 +247,11 @@ extension MoviesTabViewController: UISearchBarDelegate {
                     options: .CaseInsensitiveSearch) != nil
             })
             tableView.reloadData()
+            collectionView.reloadData()
         } else {
             filteredMovies = movieList
             tableView.reloadData()
+            collectionView.reloadData()
             searchBar.endEditing(true)
         }
     }
@@ -258,6 +260,7 @@ extension MoviesTabViewController: UISearchBarDelegate {
         filteredMovies = movieList
         searchBar.text = ""
         tableView.reloadData()
+        collectionView.reloadData()
     }
 }
 
