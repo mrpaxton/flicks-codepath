@@ -65,6 +65,7 @@
                                                         </fragment>
                                                     </attributedString>
                                                     <color key="highlightedColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <size key="shadowOffset" width="0.0" height="0.0"/>
                                                 </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -137,25 +138,27 @@
                                 <color key="backgroundColor" red="0.79386151090000001" green="0.17859346679999999" blue="0.83520661569999999" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <searchBar contentMode="redraw" id="Bj6-02-xBV">
-                                <rect key="frame" x="0.0" y="63" width="320" height="44"/>
+                                <rect key="frame" x="58" y="63" width="262" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="QDW-5L-fih">
+                                <rect key="frame" x="13" y="71" width="31" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button" image="CollectionIcon"/>
+                                <connections>
+                                    <action selector="onSwapViewBarButtonTouched:" destination="Ohg-Ui-cQb" eventType="touchUpInside" id="fma-fg-GDb"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="TAI-Ry-Jlw">
-                        <barButtonItem key="rightBarButtonItem" title="SwapView" id="q3U-aF-uaA">
-                            <connections>
-                                <action selector="onSwapViewBarButtonTouched:" destination="Ohg-Ui-cQb" id="PdZ-YV-dBu"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="TAI-Ry-Jlw"/>
                     <connections>
                         <outlet property="collectionView" destination="pd5-7e-f0J" id="C48-Vf-ctA"/>
                         <outlet property="movieSearchBar" destination="Bj6-02-xBV" id="cPc-P6-JVM"/>
                         <outlet property="networkErrorView" destination="fpA-vr-vj9" id="kmW-jP-K6i"/>
-                        <outlet property="swapViewBarButton" destination="q3U-aF-uaA" id="xzd-zw-sX7"/>
+                        <outlet property="swapViewBarButton" destination="QDW-5L-fih" id="bXj-T2-KJb"/>
                         <outlet property="tableView" destination="qL1-Xa-513" id="P7T-Xu-tD0"/>
                     </connections>
                 </viewController>
@@ -271,6 +274,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="CollectionIcon" width="120" height="120"/>
         <image name="MovieIcon" width="25" height="25"/>
         <image name="TvIcon" width="25" height="25"/>
     </resources>

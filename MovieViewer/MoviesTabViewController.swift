@@ -24,26 +24,11 @@ class MoviesTabViewController: UIViewController {
     var refreshControl: UIRefreshControl!
     
     @IBOutlet weak var networkErrorView: UIView!
-    @IBOutlet weak var swapViewBarButton: UIBarButtonItem!
+    @IBOutlet weak var swapViewBarButton: UIButton!
     
     var movieList:  [Movie] = []
     var filteredMovies: [Movie] = []
     
-    
-    @IBAction func onSwapViewBarButtonTouched(sender: UIBarButtonItem) {
-        var fromView: UIView!
-        var toView: UIView!
-        
-        if self.tableView?.superview == self.view {
-            (fromView, toView) = (self.tableView, self.collectionView)
-        } else {
-            (fromView, toView) = (self.collectionView, self.tableView)
-        }
-        
-        toView?.frame = fromView.frame
-        UIView.transitionFromView(fromView, toView: toView,
-            duration: 0.15, options: UIViewAnimationOptions.TransitionFlipFromRight, completion: nil)
-    }
     
     
     override func viewDidLoad() {
@@ -54,6 +39,7 @@ class MoviesTabViewController: UIViewController {
         tableView.delegate = self
         movieSearchBar.delegate = self
         collectionView.dataSource = self
+        collectionView.delegate = self
         
         pullRefreshControl()
         setupProgressBar()
@@ -168,6 +154,33 @@ class MoviesTabViewController: UIViewController {
         }
     }
     
+    func refreshMovieData() {
+        tableView.reloadData()
+        collectionView.reloadData()
+    }
+    
+    @IBAction func onSwapViewBarButtonTouched(sender: UIButton) {
+        var fromView: UIView!
+        var toView: UIView!
+        
+        if self.tableView?.superview == self.view {
+            (fromView, toView) = (self.tableView, self.collectionView)
+        } else {
+            (fromView, toView) = (self.collectionView, self.tableView)
+        }
+        
+        toView?.frame = fromView.frame
+        UIView.transitionFromView(fromView, toView: toView,
+            duration: 0.15, options: UIViewAnimationOptions.TransitionFlipFromRight, completion: nil)
+        
+        if fromView == tableView {
+            swapViewBarButton.setImage( UIImage(named: "TableIcon"), forState: .Normal )
+        } else {
+            swapViewBarButton.setImage( UIImage(named: "CollectionIcon"), forState: .Normal )
+        }
+    }
+    
+    
     //style the status bar
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
@@ -181,11 +194,12 @@ class MoviesTabViewController: UIViewController {
     // MARK: - Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "movieSegue" {
-            
-            let chosenIndex = self.tableView.indexPathForCell(sender as! MovieCell)
+            let chosenIndex = sender is MovieCollectionCell ?
+                self.collectionView.indexPathForCell((sender as? MovieCollectionCell)!)!.row :
+                self.tableView.indexPathForCell((sender as? MovieCell)!)!.row
             
             if let showDetailsVC = segue.destinationViewController as? ShowDetailsViewController {
-                showDetailsVC.item = movieList[chosenIndex!.row]
+                showDetailsVC.item = filteredMovies[chosenIndex]
             }
         }
     }
@@ -194,10 +208,6 @@ class MoviesTabViewController: UIViewController {
 
 extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        guard let filteredMovies = filteredMovies else {
-//            return 0
-//        }
-        
         return self.filteredMovies.count
     }
     
@@ -212,16 +222,12 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         let title = movie.title
         let overview = movie.overview
         let posterPath = movie.posterPath
-        
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + (posterPath ?? "") )
         let request = NSURLRequest(URL: imageUrl!)
-        
         let placeholderImage = UIImage(named: "MovieHolder")
-        
-        
-        //setImageWithURL() - from cocoapods AFNetworking
-        //cell.movieImageView.setImageWithURL(imageUrl!) - without fadein effect
+        //** setImageWithURL() - from cocoapods AFNetworking
+        //** cell.movieImageView.setImageWithURL(imageUrl!) - without fade-in effect
         
         //fade-in effect on movie images
         cell.movieImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
@@ -232,8 +238,6 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         cell.backgroundColor = UIColor(hexString: "#f47920ee")
         return cell
     }
-    
-
 }
 
 extension MoviesTabViewController: UISearchBarDelegate {
@@ -243,28 +247,23 @@ extension MoviesTabViewController: UISearchBarDelegate {
             //TODO: when didBackwardDelete, re-filter the movie list and reload the table
             
             filteredMovies = filteredMovies.filter({
-                ($0.title)!.rangeOfString(searchText,
-                    options: .CaseInsensitiveSearch) != nil
+                ($0.title)!.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
             })
-            tableView.reloadData()
-            collectionView.reloadData()
+            refreshMovieData()
         } else {
             filteredMovies = movieList
-            tableView.reloadData()
-            collectionView.reloadData()
+            refreshMovieData()
             searchBar.endEditing(true)
         }
     }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        filteredMovies = movieList
-        searchBar.text = ""
-        tableView.reloadData()
-        collectionView.reloadData()
+        (filteredMovies, searchBar.text) = (movieList, "")
+        refreshMovieData()
     }
 }
 
-extension MoviesTabViewController: UICollectionViewDataSource {
+extension MoviesTabViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.filteredMovies.count
     }
@@ -285,18 +284,17 @@ extension MoviesTabViewController: UICollectionViewDataSource {
         
         let placeholderImage = UIImage(named: "MovieHolder")
         
-        
-        //setImageWithURL() - from cocoapods AFNetworking
-        //cell.movieImageView.setImageWithURL(imageUrl!) - without fadein effect
-        
         //fade-in effect on movie images
         cell.cellImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
             UIView.transitionWithView(cell.cellImageView, duration: 0.15, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { cell.cellImageView.image = imageData }, completion: nil   )
             }, failure: nil)
         cell.titleLabel.text = title
-        //cell.overviewLabel.text = overview
         cell.backgroundColor = UIColor(hexString: "#f47920ee")
         return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        self.performSegueWithIdentifier("movieSegue", sender: self.collectionView.cellForItemAtIndexPath(indexPath))
     }
 }
 
