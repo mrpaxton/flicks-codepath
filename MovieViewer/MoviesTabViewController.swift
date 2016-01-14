@@ -69,12 +69,12 @@ class MoviesTabViewController: UIViewController {
         )
         
         //delay to see the effect on the simulator
-        delay(1.0) { SwiftLoader.show(title: "Loading...", animated: true) }
+        delay(2) { SwiftLoader.show(title: "Loading...", animated: true) }
         
         let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
                 //delay to see the effect on the simulator
-                self.delay(3.0) { SwiftLoader.hide() }
+                self.delay(3) { SwiftLoader.hide() }
                 
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
@@ -235,7 +235,7 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
             }, failure: nil)
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
-        cell.backgroundColor = UIColor(hexString: "#f47920ee")
+        cell.backgroundColor = UIColor(hexString: "#f47920cc")
         return cell
     }
 }
@@ -289,7 +289,7 @@ extension MoviesTabViewController: UICollectionViewDataSource, UICollectionViewD
             UIView.transitionWithView(cell.cellImageView, duration: 0.15, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { cell.cellImageView.image = imageData }, completion: nil   )
             }, failure: nil)
         cell.titleLabel.text = title
-        cell.backgroundColor = UIColor(hexString: "#f47920ee")
+        cell.backgroundColor = UIColor(hexString: "#f47920cc")
         return cell
     }
     

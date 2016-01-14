@@ -14,6 +14,8 @@ class ShowDetailsViewController: UIViewController {
     @IBOutlet weak var showTitle: UILabel?
     @IBOutlet weak var showOverview: UILabel?
     @IBOutlet weak var poster: UIImageView?
+    @IBOutlet weak var infoView: UIView!
+    @IBOutlet weak var movieScrollView: UIScrollView!
     var item: Movie?
     
     override func viewDidLoad() {
@@ -28,7 +30,16 @@ class ShowDetailsViewController: UIViewController {
         poster!.setImageWithURL(imageUrl!)
         
         //set background color of the image view
-        self.view.backgroundColor = UIColor(hexString: "#f4792099")
+        //self.view.backgroundColor = UIColor(hexString: "#f4792099")
+        
+        
+        //configure movieScrollView
+        let contentWidth = view.frame.width
+        let contentHeight = view.frame.height
+        movieScrollView.contentSize = CGSizeMake(contentWidth, contentHeight)
+        
+        poster!.frame = CGRectMake(15, -100, view.bounds.width - 30, view.bounds.height - 10)
+        infoView.frame = CGRectMake(15, 450, view.bounds.width - 30, 400)
         
         
     }
