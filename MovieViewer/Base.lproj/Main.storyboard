@@ -100,7 +100,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="1" green="0.37584108599999999" blue="0.47469106370000003" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <outlet property="movieImageView" destination="SgU-H9-e36" id="WMl-Ie-iCf"/>
+                                            <outlet property="cellImageView" destination="SgU-H9-e36" id="5Jt-BV-FeL"/>
                                             <outlet property="overviewLabel" destination="i5i-L8-cFw" id="BBh-Rn-S2z"/>
                                             <outlet property="titleLabel" destination="lch-Wg-zX1" id="1WN-wW-f9q"/>
                                             <segue destination="csf-ng-ybi" kind="push" identifier="movieSegue" id="UCA-Ue-CyA"/>

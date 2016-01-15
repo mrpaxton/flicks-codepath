@@ -5,11 +5,9 @@
 //  Created by Sarn Wattanasri on 1/5/16.
 //  Copyright © 2016 Sarn. All rights reserved.
 //
-
 import UIKit
 import AFNetworking
 import SwiftLoader
-
 
 class MoviesTabViewController: UIViewController {
     
@@ -26,7 +24,6 @@ class MoviesTabViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // set delegates and datasources
         tableView.dataSource = self
         tableView.delegate = self
         movieSearchBar.delegate = self
@@ -42,7 +39,7 @@ class MoviesTabViewController: UIViewController {
     @IBAction func onSwapViewBarButtonTouched(sender: UIButton) {
         var fromView: UIView!
         var toView: UIView!
-        
+        //check present view and prepare fromView and toView
         if self.tableView?.superview == self.view {
             (fromView, toView) = (self.tableView, self.collectionView)
         } else {
@@ -52,7 +49,7 @@ class MoviesTabViewController: UIViewController {
         toView?.frame = fromView.frame
         UIView.transitionFromView(fromView, toView: toView,
             duration: 0.15, options: UIViewAnimationOptions.TransitionFlipFromRight, completion: nil)
-        
+        //set the toggle image icon of the fromView/toView
         if fromView == tableView {
             swapViewBarButton.setImage( UIImage(named: "TableIcon"), forState: .Normal )
         } else {
@@ -70,15 +67,13 @@ class MoviesTabViewController: UIViewController {
     
     //private helper: setup data of movies from api call
     private func setupMoviesData() {
+        
         let (request, session) = prepareNetworkRequestSession()
-        
         SwiftLoader.show(title: "Loading...", animated: true)
-        
         let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
                 //delay to see the effect on the simulator
                 self.delay(2) { SwiftLoader.hide() }
-                
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
@@ -91,7 +86,6 @@ class MoviesTabViewController: UIViewController {
                             self.refreshMovieData()
                     }
                 }
-                
                 if error != nil {
                     self.toggleNetworkErrorView(true)
                 }
@@ -171,6 +165,22 @@ class MoviesTabViewController: UIViewController {
         collectionView.reloadData()
     }
     
+    //private helper: fade-in effect on image load from network
+    private func fadeInImageOnNetworkCall<T: UIView>(request: NSURLRequest, placeholderImage: UIImage, duration: NSTimeInterval, cell: T ) -> T? {
+        if let movieCell = cell as? MovieCell {
+            movieCell.cellImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
+                UIView.transitionWithView(movieCell.cellImageView, duration: duration, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { movieCell.cellImageView.image = imageData }, completion: nil   )
+                }, failure: nil)
+            return movieCell as? T
+        } else if let movieCell = cell as? MovieCollectionCell {
+            movieCell.cellImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
+                UIView.transitionWithView(movieCell.cellImageView, duration: duration, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { movieCell.cellImageView.image = imageData }, completion: nil   )
+                }, failure: nil)
+            return movieCell as? T
+        }
+        return nil
+    }
+    
     //style the status bar
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
@@ -215,16 +225,14 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         let imageUrl = NSURL(string: baseUrl + (posterPath ?? "") )
         let request = NSURLRequest(URL: imageUrl!)
         let placeholderImage = UIImage(named: "MovieHolder")
-        //** cell.movieImageView.setImageWithURL(imageUrl!) - without fade-in effect
+        //** cell.cellImageView.setImageWithURL(imageUrl!) - from video, without fade-in effect
         
-        //fade-in effect on movie images upon network request (not when caching)
-        cell.movieImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
-            UIView.transitionWithView(cell.movieImageView, duration: 0.15, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { cell.movieImageView.image = imageData }, completion: nil   )
-            }, failure: nil)
-        cell.titleLabel.text = title
-        cell.overviewLabel.text = overview
-        cell.backgroundColor = UIColor(hexString: "#f47920cc")
-        return cell
+        let movieCell = fadeInImageOnNetworkCall(request, placeholderImage: placeholderImage!, duration: 0.15, cell: cell) as MovieCell!
+        
+        movieCell.titleLabel.text = title
+        movieCell.overviewLabel.text = overview
+        movieCell.backgroundColor = UIColor(hexString: "#f47920cc")
+        return movieCell
     }
 }
 
@@ -263,8 +271,6 @@ extension MoviesTabViewController: UICollectionViewDataSource, UICollectionViewD
         return movieToCollectionViewCell(movie , cell: cell)
     }
     
-    
-    
     func movieToCollectionViewCell(movie: Movie, cell: MovieCollectionCell) -> UICollectionViewCell {
         let title = movie.title
         let posterPath = movie.posterPath
@@ -273,21 +279,15 @@ extension MoviesTabViewController: UICollectionViewDataSource, UICollectionViewD
         let request = NSURLRequest(URL: imageUrl!)
         let placeholderImage = UIImage(named: "MovieHolder")
         
-        //fadeInImageOnNetworkCall(request, placeholderImage, duration)
-        
-        //fade-in effect on movie images
-        cell.cellImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
-            UIView.transitionWithView(cell.cellImageView, duration: 0.15, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { cell.cellImageView.image = imageData }, completion: nil   )
-            }, failure: nil)
-        cell.titleLabel.text = title
-        cell.backgroundColor = UIColor(hexString: "#f47920cc")
-        return cell
+        let movieCell = fadeInImageOnNetworkCall(request, placeholderImage: placeholderImage!, duration: 0.15, cell: cell) as MovieCollectionCell!
+        movieCell.titleLabel.text = title
+        movieCell.backgroundColor = UIColor(hexString: "#f47920cc")
+        return movieCell
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         self.performSegueWithIdentifier("movieSegue", sender: self.collectionView.cellForItemAtIndexPath(indexPath))
     }
 }
-
 
 
