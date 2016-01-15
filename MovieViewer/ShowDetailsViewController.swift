@@ -41,7 +41,6 @@ class ShowDetailsViewController: UIViewController {
         poster!.frame = CGRectMake(15, -100, view.bounds.width - 30, view.bounds.height - 10)
         infoView.frame = CGRectMake(15, 450, view.bounds.width - 30, 400)
         
-        
     }
 
     override func didReceiveMemoryWarning() {

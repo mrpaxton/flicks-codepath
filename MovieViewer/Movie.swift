@@ -16,12 +16,3 @@ struct Movie {
     let voteAverage: Float?
     let releaseDate: NSDate?
 }
-
-struct TVShow {
-    let id: Int?
-    let title: String?
-    let overview: String?
-    let posterPath: String?
-    let voteAverage: Float?
-    let firstAirDate: NSDate?
-}

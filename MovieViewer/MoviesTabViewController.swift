@@ -28,6 +28,7 @@ class MoviesTabViewController: UIViewController {
     
     var movieList:  [Movie] = []
     var filteredMovies: [Movie] = []
+    var endpoint: String!
     
     
     
@@ -44,7 +45,6 @@ class MoviesTabViewController: UIViewController {
         pullRefreshControl()
         setupProgressBar()
         setupMoviesData()
-        
         toggleNetworkErrorView(false)
     }
     
@@ -60,7 +60,7 @@ class MoviesTabViewController: UIViewController {
     func setupMoviesData() {
         //network call
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
         let request = NSURLRequest(URL: url!)
         let session = NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
@@ -141,7 +141,6 @@ class MoviesTabViewController: UIViewController {
     }
     
     func toggleNetworkErrorView( visible: Bool) {
-        //insert below searchbar and above tableview
         if visible {
             networkErrorView.hidden = false
             UIView.animateWithDuration(0.5, delay: 0.1, options: .CurveEaseOut, animations: {
@@ -295,6 +294,7 @@ extension MoviesTabViewController: UICollectionViewDataSource, UICollectionViewD
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         self.performSegueWithIdentifier("movieSegue", sender: self.collectionView.cellForItemAtIndexPath(indexPath))
+        
     }
 }
 

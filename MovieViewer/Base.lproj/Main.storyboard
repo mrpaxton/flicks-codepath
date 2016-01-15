@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Ild-og-Uro">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="hjU-E6-k5V">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="okA-1o-ohT">
-            <objects>
-                <viewController id="qcs-Rb-2uy" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ZT8-9a-KZJ">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="NsV-0v-KFV"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xX5-TF-2lX" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="703" y="-263"/>
-        </scene>
         <!--Movies Tab View Controller-->
         <scene sceneID="Mv8-ng-QcK">
             <objects>
@@ -118,7 +103,7 @@
                                             <outlet property="movieImageView" destination="SgU-H9-e36" id="WMl-Ie-iCf"/>
                                             <outlet property="overviewLabel" destination="i5i-L8-cFw" id="BBh-Rn-S2z"/>
                                             <outlet property="titleLabel" destination="lch-Wg-zX1" id="1WN-wW-f9q"/>
-                                            <segue destination="csf-ng-ybi" kind="push" identifier="movieSegue" id="6po-dF-k6B"/>
+                                            <segue destination="csf-ng-ybi" kind="push" identifier="movieSegue" id="UCA-Ue-CyA"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -164,7 +149,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="04k-5x-ddj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="701" y="-892"/>
+            <point key="canvasLocation" x="1765" y="-892"/>
         </scene>
         <!--Show Details View Controller-->
         <scene sceneID="ZR9-et-h6D">
@@ -222,72 +207,28 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sgV-Dd-FNa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1170" y="-654"/>
+            <point key="canvasLocation" x="2196" y="-881"/>
         </scene>
-        <!--Tab Bar Controller-->
-        <scene sceneID="uJl-Nz-j9P">
+        <!--Navigation Controller-->
+        <scene sceneID="biP-z4-Fzz">
             <objects>
-                <tabBarController id="Ild-og-Uro" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="aMe-ot-xvN">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="YQY-pg-QUK" kind="relationship" relationship="viewControllers" id="y9x-to-FO7"/>
-                        <segue destination="V6c-bG-HNn" kind="relationship" relationship="viewControllers" id="FGq-60-NnP"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Irx-qB-Fr0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-369" y="-577"/>
-        </scene>
-        <!--Movies-->
-        <scene sceneID="Srd-44-kDG">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="YQY-pg-QUK" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Movies" image="MovieIcon" id="daO-iQ-Cco">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
-                    </tabBarItem>
+                <navigationController storyboardIdentifier="MoviesNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hjU-E6-k5V" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wxY-tZ-MfL">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="On2-OV-crd">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Ohg-Ui-cQb" kind="relationship" relationship="rootViewController" id="36E-z7-BCn"/>
+                        <segue destination="Ohg-Ui-cQb" kind="relationship" relationship="rootViewController" id="eoX-JA-9Q6"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="JqN-MA-FYL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fFV-Vq-MwV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="171" y="-892"/>
-        </scene>
-        <!--TV Shows-->
-        <scene sceneID="hzv-cA-w1e">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="V6c-bG-HNn" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="TV Shows" image="TvIcon" id="lIY-se-CSr">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="-3"/>
-                    </tabBarItem>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="rC3-Nq-nFH">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="qcs-Rb-2uy" kind="relationship" relationship="rootViewController" id="AeY-s7-pVR"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="HrC-dg-odZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="171" y="-263"/>
+            <point key="canvasLocation" x="1233" y="-892"/>
         </scene>
     </scenes>
     <resources>
         <image name="CollectionIcon" width="120" height="120"/>
-        <image name="MovieIcon" width="25" height="25"/>
-        <image name="TvIcon" width="25" height="25"/>
     </resources>
 </document>
