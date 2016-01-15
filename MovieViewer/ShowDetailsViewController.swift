@@ -24,13 +24,13 @@ class ShowDetailsViewController: UIViewController {
         // Do any additional setup after loading the view.
         showTitle!.text = item?.title
         showOverview!.text = item?.overview
-        let posterPath = item?.posterPath
+        let posterPath = item?.posterPath ?? ""
         let baseUrl = "http://image.tmdb.org/t/p/w500"
-        let imageUrl = NSURL(string: baseUrl + (posterPath! as String ?? "") )
+        let imageUrl = NSURL(string: baseUrl + (posterPath))
         poster!.setImageWithURL(imageUrl!)
         
         //set background color of the image view
-        //self.view.backgroundColor = UIColor(hexString: "#f4792099")
+        self.view.backgroundColor = UIColor(hexString: "#f4792099")
         
         
         //configure movieScrollView
@@ -40,7 +40,6 @@ class ShowDetailsViewController: UIViewController {
         
         poster!.frame = CGRectMake(15, -100, view.bounds.width - 30, view.bounds.height - 10)
         infoView.frame = CGRectMake(15, 450, view.bounds.width - 30, 400)
-        
     }
 
     override func didReceiveMemoryWarning() {

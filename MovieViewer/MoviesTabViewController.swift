@@ -39,8 +39,29 @@ class MoviesTabViewController: UIViewController {
         toggleNetworkErrorView(false)
     }
     
+    @IBAction func onSwapViewBarButtonTouched(sender: UIButton) {
+        var fromView: UIView!
+        var toView: UIView!
+        
+        if self.tableView?.superview == self.view {
+            (fromView, toView) = (self.tableView, self.collectionView)
+        } else {
+            (fromView, toView) = (self.collectionView, self.tableView)
+        }
+        
+        toView?.frame = fromView.frame
+        UIView.transitionFromView(fromView, toView: toView,
+            duration: 0.15, options: UIViewAnimationOptions.TransitionFlipFromRight, completion: nil)
+        
+        if fromView == tableView {
+            swapViewBarButton.setImage( UIImage(named: "TableIcon"), forState: .Normal )
+        } else {
+            swapViewBarButton.setImage( UIImage(named: "CollectionIcon"), forState: .Normal )
+        }
+    }
+    
     //private helper: pull to refresh control. Add the UIRefershControl to the table view
-    func pullRefreshControl() {
+    private func pullRefreshControl() {
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self,
             action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
@@ -48,7 +69,7 @@ class MoviesTabViewController: UIViewController {
     }
     
     //private helper: setup data of movies from api call
-    func setupMoviesData() {
+    private func setupMoviesData() {
         let (request, session) = prepareNetworkRequestSession()
         
         SwiftLoader.show(title: "Loading...", animated: true)
@@ -78,8 +99,8 @@ class MoviesTabViewController: UIViewController {
         task.resume()
     }
     
-    func prepareNetworkRequestSession() -> (NSURLRequest, NSURLSession) {
-        //network call
+    //private helper: handle network call
+    private func prepareNetworkRequestSession() -> (NSURLRequest, NSURLSession) {
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
         let request = NSURLRequest(URL: url!)
@@ -91,7 +112,7 @@ class MoviesTabViewController: UIViewController {
         return (request, session)
     }
     
-    func movieDictToModel(movie: NSDictionary) -> Movie {
+    private func movieDictToModel(movie: NSDictionary) -> Movie {
         let id = movie["id"] as! Int
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
@@ -110,9 +131,8 @@ class MoviesTabViewController: UIViewController {
         config.foregroundColor = .blackColor()
         config.foregroundAlpha = 0.9
         //set new config for SwiftLoader
+        //** Note: SwiftLoader not updated for the new version of Swift - I modified the lib
         SwiftLoader.setConfig(config)
-        //** Note: SwiftLoader is not updated for the new version of Swift.
-        //** I modified the library a little
     }
     
     //callboack for UIRefreshControl
@@ -133,7 +153,7 @@ class MoviesTabViewController: UIViewController {
         )
     }
     
-    func toggleNetworkErrorView( visible: Bool) {
+    private func toggleNetworkErrorView( visible: Bool) {
         if visible {
             networkErrorView.hidden = false
             UIView.animateWithDuration(0.5, delay: 0.1, options: .CurveEaseOut, animations: {
@@ -146,30 +166,9 @@ class MoviesTabViewController: UIViewController {
         }
     }
     
-    func refreshMovieData() {
+    private func refreshMovieData() {
         tableView.reloadData()
         collectionView.reloadData()
-    }
-    
-    @IBAction func onSwapViewBarButtonTouched(sender: UIButton) {
-        var fromView: UIView!
-        var toView: UIView!
-        
-        if self.tableView?.superview == self.view {
-            (fromView, toView) = (self.tableView, self.collectionView)
-        } else {
-            (fromView, toView) = (self.collectionView, self.tableView)
-        }
-        
-        toView?.frame = fromView.frame
-        UIView.transitionFromView(fromView, toView: toView,
-            duration: 0.15, options: UIViewAnimationOptions.TransitionFlipFromRight, completion: nil)
-        
-        if fromView == tableView {
-            swapViewBarButton.setImage( UIImage(named: "TableIcon"), forState: .Normal )
-        } else {
-            swapViewBarButton.setImage( UIImage(named: "CollectionIcon"), forState: .Normal )
-        }
     }
     
     //style the status bar
@@ -218,7 +217,7 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         let placeholderImage = UIImage(named: "MovieHolder")
         //** cell.movieImageView.setImageWithURL(imageUrl!) - without fade-in effect
         
-        //fade-in effect on movie images
+        //fade-in effect on movie images upon network request (not when caching)
         cell.movieImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
             UIView.transitionWithView(cell.movieImageView, duration: 0.15, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { cell.movieImageView.image = imageData }, completion: nil   )
             }, failure: nil)
@@ -264,15 +263,17 @@ extension MoviesTabViewController: UICollectionViewDataSource, UICollectionViewD
         return movieToCollectionViewCell(movie , cell: cell)
     }
     
+    
+    
     func movieToCollectionViewCell(movie: Movie, cell: MovieCollectionCell) -> UICollectionViewCell {
         let title = movie.title
         let posterPath = movie.posterPath
-        
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + (posterPath ?? "") )
         let request = NSURLRequest(URL: imageUrl!)
-        
         let placeholderImage = UIImage(named: "MovieHolder")
+        
+        //fadeInImageOnNetworkCall(request, placeholderImage, duration)
         
         //fade-in effect on movie images
         cell.cellImageView.setImageWithURLRequest(request, placeholderImage: placeholderImage, success: { (request, response, imageData) -> Void in
