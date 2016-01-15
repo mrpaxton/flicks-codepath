@@ -15,22 +15,13 @@ class MoviesTabViewController: UIViewController {
     
     @IBOutlet var tableView: UITableView!
     @IBOutlet var collectionView: UICollectionView!
-    
     @IBOutlet weak var movieSearchBar: UISearchBar!
-    var movies: [NSDictionary]?
-    
-    
-    //UIRefreshControl - for pull to refresh
-    var refreshControl: UIRefreshControl!
-    
     @IBOutlet weak var networkErrorView: UIView!
     @IBOutlet weak var swapViewBarButton: UIButton!
-    
+    var refreshControl: UIRefreshControl!
     var movieList:  [Movie] = []
     var filteredMovies: [Movie] = []
     var endpoint: String!
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +49,36 @@ class MoviesTabViewController: UIViewController {
     
     //private helper: setup data of movies from api call
     func setupMoviesData() {
+        let (request, session) = prepareNetworkRequestSession()
+        
+        SwiftLoader.show(title: "Loading...", animated: true)
+        
+        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
+            completionHandler: { (dataOrNil, response, error) in
+                //delay to see the effect on the simulator
+                self.delay(2) { SwiftLoader.hide() }
+                
+                if let data = dataOrNil {
+                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
+                        data, options:[]) as? NSDictionary {
+                            let movies = responseDictionary["results"] as? [NSDictionary]
+                            for movie in movies! {
+                                let currentMovie = self.movieDictToModel(movie)
+                                self.movieList.append( currentMovie )
+                                self.filteredMovies.append( currentMovie )
+                            }
+                            self.refreshMovieData()
+                    }
+                }
+                
+                if error != nil {
+                    self.toggleNetworkErrorView(true)
+                }
+        });
+        task.resume()
+    }
+    
+    func prepareNetworkRequestSession() -> (NSURLRequest, NSURLSession) {
         //network call
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
@@ -67,46 +88,18 @@ class MoviesTabViewController: UIViewController {
             delegate:nil,
             delegateQueue:NSOperationQueue.mainQueue()
         )
-        
-        //delay to see the effect on the simulator
-        delay(2) { SwiftLoader.show(title: "Loading...", animated: true) }
-        
-        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
-            completionHandler: { (dataOrNil, response, error) in
-                //delay to see the effect on the simulator
-                self.delay(3) { SwiftLoader.hide() }
-                
-                if let data = dataOrNil {
-                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
-                        data, options:[]) as? NSDictionary {
-                            self.movies = responseDictionary["results"] as? [NSDictionary]
-                            
-                            //build a list of Movies
-                            for movie in self.movies! {
-                                let id = movie["id"] as! Int
-                                let title = movie["title"] as! String
-                                let overview = movie["overview"] as! String
-                                let posterPath = movie["poster_path"] as? String
-                                let voteAverage = movie["vote_average"] as? Float
-                                let releaseDate = movie["release_date"] as? NSDate
-                                let currentMovie = Movie( id: id, title: title,
-                                    overview: overview, posterPath: posterPath,
-                                    voteAverage: voteAverage, releaseDate: releaseDate)
-                                self.movieList.append( currentMovie )
-                                self.filteredMovies.append( currentMovie )
-                            }
-                            
-                            self.tableView.reloadData()
-                            self.collectionView.reloadData()
-                    }
-                }
-                
-                if error != nil {
-                    //show network error message box
-                    self.toggleNetworkErrorView(true)
-                }
-        });
-        task.resume()
+        return (request, session)
+    }
+    
+    func movieDictToModel(movie: NSDictionary) -> Movie {
+        let id = movie["id"] as! Int
+        let title = movie["title"] as! String
+        let overview = movie["overview"] as! String
+        let posterPath = movie["poster_path"] as? String
+        let voteAverage = movie["vote_average"] as? Float
+        let releaseDate = movie["release_date"] as? NSDate
+        return Movie( id: id, title: title, overview: overview, posterPath: posterPath,
+            voteAverage: voteAverage, releaseDate: releaseDate)
     }
     
     //private helper: setup and config a SwiftLoader progress bar
@@ -179,7 +172,6 @@ class MoviesTabViewController: UIViewController {
         }
     }
     
-    
     //style the status bar
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
@@ -204,7 +196,6 @@ class MoviesTabViewController: UIViewController {
     }
 }
 
-
 extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.filteredMovies.count
@@ -225,7 +216,6 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         let imageUrl = NSURL(string: baseUrl + (posterPath ?? "") )
         let request = NSURLRequest(URL: imageUrl!)
         let placeholderImage = UIImage(named: "MovieHolder")
-        //** setImageWithURL() - from cocoapods AFNetworking
         //** cell.movieImageView.setImageWithURL(imageUrl!) - without fade-in effect
         
         //fade-in effect on movie images
@@ -242,7 +232,7 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
 extension MoviesTabViewController: UISearchBarDelegate {
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         searchBar.setShowsCancelButton(true, animated: true)
-        if !searchText.isEmpty {
+        if searchText.characters.count >= 0 {
             //TODO: when didBackwardDelete, re-filter the movie list and reload the table
             
             filteredMovies = filteredMovies.filter({
@@ -259,6 +249,7 @@ extension MoviesTabViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         (filteredMovies, searchBar.text) = (movieList, "")
         refreshMovieData()
+        searchBar.resignFirstResponder()
     }
 }
 
@@ -294,7 +285,6 @@ extension MoviesTabViewController: UICollectionViewDataSource, UICollectionViewD
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         self.performSegueWithIdentifier("movieSegue", sender: self.collectionView.cellForItemAtIndexPath(indexPath))
-        
     }
 }
 
