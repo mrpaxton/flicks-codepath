@@ -239,18 +239,11 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
 extension MoviesTabViewController: UISearchBarDelegate {
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         searchBar.setShowsCancelButton(true, animated: true)
-        if searchText.characters.count >= 0 {
-            //TODO: when didBackwardDelete, re-filter the movie list and reload the table
-            
-            filteredMovies = filteredMovies.filter({
-                ($0.title)!.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
-            })
-            refreshMovieData()
-        } else {
-            filteredMovies = movieList
-            refreshMovieData()
-            searchBar.endEditing(true)
-        }
+        
+        filteredMovies = searchText.isEmpty ? movieList : movieList.filter({
+            $0.title!.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+        })
+        refreshMovieData()
     }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {

@@ -38,13 +38,13 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="y6T-ep-lpA">
-                                                    <rect key="frame" x="8" y="217" width="154" height="49"/>
+                                                    <rect key="frame" x="8" y="217" width="175" height="50"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Movie Title">
                                                             <attributes>
                                                                 <color key="NSColor" red="0.18000978714660384" green="0.1836208775705109" blue="0.1840080492424242" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <font key="NSFont" size="17" name="Geneva"/>
+                                                                <font key="NSFont" size="22" name="Geneva"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="justified" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                                             </attributes>
                                                         </fragment>
@@ -75,7 +75,7 @@
                                         <rect key="frame" x="0.0" y="28" width="402" height="143"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mLd-dy-UB1" id="bUy-F8-MFJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="369" height="143"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="369" height="142.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lch-Wg-zX1">
