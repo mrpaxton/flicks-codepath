@@ -181,6 +181,15 @@ class MoviesTabViewController: UIViewController {
         return nil
     }
     
+    //private helper: style the selected cell
+    func beautifySelectedCell(cell: UITableViewCell) -> UITableViewCell {
+        //cell.selectionStyle = .None
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = UIColor.yellowColor()
+        cell.selectedBackgroundView = backgroundView
+        return cell
+    }
+    
     //style the status bar
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return UIStatusBarStyle.LightContent
@@ -232,7 +241,10 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         movieCell.titleLabel.text = title
         movieCell.overviewLabel.text = overview
         movieCell.backgroundColor = UIColor(hexString: "#f47920cc")
-        return movieCell
+        
+        //customize the cell selection effects
+        let beautifiedSelectedCell = beautifySelectedCell(movieCell)
+        return beautifiedSelectedCell
     }
 }
 
