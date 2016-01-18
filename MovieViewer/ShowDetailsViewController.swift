@@ -33,7 +33,18 @@ class ShowDetailsViewController: UIViewController {
         let imageUrlSmall = NSURL(string: baseUrlSmall + posterPath)
         let smallImageRequest = NSURLRequest(URL: imageUrlSmall!)
         let largeImageRequest = NSURLRequest(URL: imageUrl!)
+        loadLowResolutionThenLargerImages(smallImageRequest,
+            largeImageRequest: largeImageRequest, poster: poster )
         
+        //configure movieScrollView
+        movieScrollView.contentSize = CGSize(width: movieScrollView.frame.size.width,
+            height: infoView.frame.origin.y + infoView.frame.size.height)
+        showOverview!.sizeToFit()
+    }
+    
+    private func loadLowResolutionThenLargerImages(smallImageRequest: NSURLRequest,
+        largeImageRequest: NSURLRequest, poster: UIImageView?) {
+            
         poster!.setImageWithURLRequest(smallImageRequest,
             placeholderImage: nil ,
             success: { (smallImageRequest, smallImageResponse, smallImage) -> Void in
@@ -56,11 +67,6 @@ class ShowDetailsViewController: UIViewController {
                 self.poster!.image = UIImage(named: "MovieHolder")
             }
         )
-        
-        //configure movieScrollView
-        movieScrollView.contentSize = CGSize(width: movieScrollView.frame.size.width,
-            height: infoView.frame.origin.y + infoView.frame.size.height)
-        showOverview!.sizeToFit()
     }
 
     override func didReceiveMemoryWarning() {
