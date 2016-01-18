@@ -221,7 +221,7 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         let title = movie.title
         let overview = movie.overview
         let posterPath = movie.posterPath
-        let baseUrl = "http://image.tmdb.org/t/p/w500"
+        let baseUrl = "http://image.tmdb.org/t/p/w300"
         let imageUrl = NSURL(string: baseUrl + (posterPath ?? "") )
         let request = NSURLRequest(URL: imageUrl!)
         let placeholderImage = UIImage(named: "MovieHolder")
@@ -255,7 +255,7 @@ extension MoviesTabViewController: UISearchBarDelegate {
 
 extension MoviesTabViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.filteredMovies.count
+        return self.filteredMovies.count ?? 0
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -267,7 +267,7 @@ extension MoviesTabViewController: UICollectionViewDataSource, UICollectionViewD
     func movieToCollectionViewCell(movie: Movie, cell: MovieCollectionCell) -> UICollectionViewCell {
         let title = movie.title
         let posterPath = movie.posterPath
-        let baseUrl = "http://image.tmdb.org/t/p/w500"
+        let baseUrl = "http://image.tmdb.org/t/p/w300"
         let imageUrl = NSURL(string: baseUrl + (posterPath ?? "") )
         let request = NSURLRequest(URL: imageUrl!)
         let placeholderImage = UIImage(named: "MovieHolder")

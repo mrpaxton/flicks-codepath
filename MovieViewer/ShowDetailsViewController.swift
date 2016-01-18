@@ -26,21 +26,40 @@ class ShowDetailsViewController: UIViewController {
         showOverview!.text = item?.overview
         let posterPath = item?.posterPath ?? ""
         let baseUrl = "http://image.tmdb.org/t/p/w500"
-        let imageUrl = NSURL(string: baseUrl + (posterPath))
-        poster!.setImageWithURL(imageUrl!)
+        let imageUrl = NSURL(string: baseUrl + posterPath)
         
-        //set background color of the image view
-        //self.view.backgroundColor = UIColor(hexString: "#f4792099")
+        //load low resolution image first then larger image
+        let baseUrlSmall = "http://image.tmdb.org/t/p/w92"
+        let imageUrlSmall = NSURL(string: baseUrlSmall + posterPath)
+        let smallImageRequest = NSURLRequest(URL: imageUrlSmall!)
+        let largeImageRequest = NSURLRequest(URL: imageUrl!)
+        
+        poster!.setImageWithURLRequest(smallImageRequest,
+            placeholderImage: nil ,
+            success: { (smallImageRequest, smallImageResponse, smallImage) -> Void in
+                self.poster!.alpha = 0.0
+                self.poster!.image = smallImage
+                self.poster!.contentMode = .ScaleAspectFit
+                
+                UIView.animateWithDuration(0.3, animations: { self.poster!.alpha = 1.0 },
+                    completion: { (success) -> Void in
+                        self.poster!.setImageWithURLRequest(largeImageRequest,
+                            placeholderImage: smallImage,
+                            success: { (largeImageRequest, largeImageResponse, largeImage) -> Void in
+                                self.poster!.image = largeImage
+                            }, failure: { (request, response, error ) -> Void in
+                                self.poster!.image = UIImage(named: "MovieHolder")
+                        })
+                    }
+                )
+            }, failure: {(request, response, error) -> Void in
+                self.poster!.image = UIImage(named: "MovieHolder")
+            }
+        )
         
         //configure movieScrollView
-//        let contentWidth = view.frame.width
-//        let contentHeight = view.frame.height
-//        movieScrollView.contentSize = CGSizeMake(contentWidth, contentHeight)
-//        
-//        poster!.frame = CGRectMake(15, -100, view.bounds.width - 30, view.bounds.height - 10)
-//        infoView.frame = CGRectMake(15, 450, view.bounds.width - 30, 400)
-        
-        movieScrollView.contentSize = CGSize(width: movieScrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height)
+        movieScrollView.contentSize = CGSize(width: movieScrollView.frame.size.width,
+            height: infoView.frame.origin.y + infoView.frame.size.height)
         showOverview!.sizeToFit()
     }
 
