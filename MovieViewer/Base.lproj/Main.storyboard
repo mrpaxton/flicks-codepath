@@ -75,7 +75,7 @@
                                         <rect key="frame" x="0.0" y="28" width="402" height="143"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mLd-dy-UB1" id="bUy-F8-MFJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="369" height="142.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="369" height="143"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lch-Wg-zX1">

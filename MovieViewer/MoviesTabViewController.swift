@@ -33,7 +33,27 @@ class MoviesTabViewController: UIViewController {
         pullRefreshControl()
         setupProgressBar()
         setupMoviesData()
+        customizeNavigationBar()
         toggleNetworkErrorView(false)
+        
+    }
+    
+    private func customizeNavigationBar() {
+        self.navigationItem.title = "Flicks"
+        if let navigationBar = navigationController?.navigationBar {
+            //navigationBar.setBackgroundImage(UIImage(named: "MovieHolder"), forBarMetrics: .Default)
+            navigationBar.tintColor = UIColor(hexString: "#bcbcbcff")
+            
+            let shadow = NSShadow()
+            shadow.shadowColor = UIColor(hexString: "#f47920aa")?.colorWithAlphaComponent(0.5)
+            shadow.shadowOffset = CGSizeMake(1, 1);
+            shadow.shadowBlurRadius = 2;
+            navigationBar.titleTextAttributes = [
+                NSFontAttributeName : UIFont.boldSystemFontOfSize(30),
+                NSForegroundColorAttributeName : UIColor(hexString: "#222222ee")!,
+                NSShadowAttributeName : shadow
+            ]
+        }
     }
     
     @IBAction func onSwapViewBarButtonTouched(sender: UIButton) {
