@@ -20,6 +20,9 @@ class MoviesTabViewController: UIViewController {
     var movieList:  [Movie] = []
     var filteredMovies: [Movie] = []
     var endpoint: String!
+    var searchButtonItem: UIBarButtonItem!
+    var swapButtonItem: UIBarButtonItem!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,22 +41,62 @@ class MoviesTabViewController: UIViewController {
         
     }
     
+    func didTapSearchButton(sender: AnyObject?) {
+        //show search bar
+        movieSearchBar.hidden = true
+        movieSearchBar.alpha = 0.3
+        navigationItem.titleView = movieSearchBar
+        navigationItem.setRightBarButtonItem(nil , animated: true)
+        UIView.animateWithDuration(0.2,
+            animations: { Void in
+                self.movieSearchBar.hidden = false
+                self.movieSearchBar.alpha = 1
+            }, completion: { finished in
+                self.movieSearchBar.setShowsCancelButton(true, animated: false)
+                self.movieSearchBar.becomeFirstResponder()
+            }
+        )
+    }
+    
+    func hideTopBar() {
+        navigationItem.setRightBarButtonItem( searchButtonItem, animated: true)
+        navigationItem.titleView = nil
+        movieSearchBar.text = ""
+    }
+    
     private func customizeNavigationBar() {
         self.navigationItem.title = "Flicks"
         if let navigationBar = navigationController?.navigationBar {
             //navigationBar.setBackgroundImage(UIImage(named: "MovieHolder"), forBarMetrics: .Default)
-            navigationBar.tintColor = UIColor(hexString: "#bcbcbcff")
+            navigationBar.tintColor = UIColor(hexString: "#333333ff")
             
             let shadow = NSShadow()
             shadow.shadowColor = UIColor(hexString: "#f47920aa")?.colorWithAlphaComponent(0.5)
             shadow.shadowOffset = CGSizeMake(1, 1);
             shadow.shadowBlurRadius = 2;
             navigationBar.titleTextAttributes = [
-                NSFontAttributeName : UIFont.boldSystemFontOfSize(30),
-                NSForegroundColorAttributeName : UIColor(hexString: "#222222ee")!,
+                NSFontAttributeName : UIFont.boldSystemFontOfSize(25),
+                NSForegroundColorAttributeName : UIColor(hexString: "#333333ee")!,
                 NSShadowAttributeName : shadow
             ]
         }
+        
+        switch tabBarController?.selectedIndex {
+        case 0?:
+            navigationItem.title = "Now Playing"
+        case 1?:
+            navigationItem.title = "Top Rated"
+        default: break
+        }
+        
+        movieSearchBar.hidden = true
+        swapViewBarButton.hidden = true
+        searchButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Search, target: self, action: "didTapSearchButton:")
+        swapButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Organize, target: self, action: "onSwapViewBarButtonTouched:")
+        
+        navigationItem.rightBarButtonItem = searchButtonItem
+        navigationItem.leftBarButtonItem = swapButtonItem
+        navigationItem.leftBarButtonItem!.image = UIImage(named: "TableIcon")
     }
     
     @IBAction func onSwapViewBarButtonTouched(sender: UIButton) {
