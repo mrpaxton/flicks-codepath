@@ -248,7 +248,7 @@ class MoviesTabViewController: UIViewController {
     func beautifySelectedCell(cell: UITableViewCell) -> UITableViewCell {
         //cell.selectionStyle = .None
         let backgroundView = UIView()
-        backgroundView.backgroundColor = UIColor.yellowColor()
+        backgroundView.backgroundColor = UIColor.grayColor()
         cell.selectedBackgroundView = backgroundView
         return cell
     }
@@ -350,6 +350,10 @@ extension MoviesTabViewController: UICollectionViewDataSource, UICollectionViewD
         let movieCell = fadeInImageOnNetworkCall(request, placeholderImage: placeholderImage!, duration: 0.15, cell: cell) as MovieCollectionCell!
         movieCell.titleLabel.text = title
         movieCell.backgroundColor = UIColor(hexString: "#f47920cc")
+        
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = UIColor.grayColor()
+        movieCell.selectedBackgroundView = backgroundView
         return movieCell
     }
     
