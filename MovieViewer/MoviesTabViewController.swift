@@ -15,13 +15,12 @@ class MoviesTabViewController: UIViewController {
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet weak var movieSearchBar: UISearchBar!
     @IBOutlet weak var networkErrorView: UIView!
-    @IBOutlet weak var swapViewBarButton: UIButton!
     var refreshControl: UIRefreshControl!
     var movieList:  [Movie] = []
     var filteredMovies: [Movie] = []
     var endpoint: String!
     var searchButtonItem: UIBarButtonItem!
-    var swapButtonItem: UIBarButtonItem!
+    var swapViewButton: UIButton!
 
     
     override func viewDidLoad() {
@@ -81,6 +80,7 @@ class MoviesTabViewController: UIViewController {
             ]
         }
         
+        //customize text to show in the header
         switch tabBarController?.selectedIndex {
         case 0?:
             navigationItem.title = "Now Playing"
@@ -89,34 +89,40 @@ class MoviesTabViewController: UIViewController {
         default: break
         }
         
+        //setup for search bar
         movieSearchBar.hidden = true
-        swapViewBarButton.hidden = true
         searchButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Search, target: self, action: "didTapSearchButton:")
-        swapButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Organize, target: self, action: "onSwapViewBarButtonTouched:")
-        
         navigationItem.rightBarButtonItem = searchButtonItem
-        navigationItem.leftBarButtonItem = swapButtonItem
-        navigationItem.leftBarButtonItem!.image = UIImage(named: "TableIcon")
+        
+        //preare button for the left navigationitem's bar item button and add negative spacer
+        let tableIcon = UIImage(named: "TableIcon")
+        swapViewButton = UIButton(type: UIButtonType.Custom)
+        swapViewButton.addTarget(self,
+            action: "onSwapViewBarButtonTouched:", forControlEvents: .TouchUpInside)
+        swapViewButton.frame = CGRectMake(0, 0, 44, 44)
+        swapViewButton.setImage(tableIcon , forState: UIControlState.Normal)
+        let tableBarItemButton = UIBarButtonItem(customView: swapViewButton)
+        let negativeSpacer: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target: nil , action: nil )
+        negativeSpacer.width = -15
+        navigationItem.leftBarButtonItems = [negativeSpacer, tableBarItemButton]
     }
     
     @IBAction func onSwapViewBarButtonTouched(sender: UIButton) {
-        var fromView: UIView!
-        var toView: UIView!
+        var fromView: UIView!, toView: UIView!
         //check present view and prepare fromView and toView
-        if self.tableView?.superview == self.view {
-            (fromView, toView) = (self.tableView, self.collectionView)
-        } else {
-            (fromView, toView) = (self.collectionView, self.tableView)
-        }
+        let isTableViewPresent = tableView?.superview == self.view
+        (fromView, toView) = isTableViewPresent ?
+            (tableView, collectionView) : (collectionView, tableView)
         
         toView?.frame = fromView.frame
         UIView.transitionFromView(fromView, toView: toView,
             duration: 0.15, options: UIViewAnimationOptions.TransitionFlipFromRight, completion: nil)
-        //set the toggle image icon of the fromView/toView
+        
+        //toggle image icon of the fromView/toView
         if fromView == tableView {
-            swapViewBarButton.setImage( UIImage(named: "TableIcon"), forState: .Normal )
+            swapViewButton.setImage( UIImage(named: "TableIcon"), forState: .Normal )
         } else {
-            swapViewBarButton.setImage( UIImage(named: "CollectionIcon"), forState: .Normal )
+            swapViewButton.setImage( UIImage(named: "CollectionIcon"), forState: .Normal )
         }
     }
     

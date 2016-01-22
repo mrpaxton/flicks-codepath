@@ -64,7 +64,7 @@
                                 </cells>
                             </collectionView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="143" sectionHeaderHeight="28" sectionFooterHeight="28" id="qL1-Xa-513">
-                                <rect key="frame" x="0.0" y="65" width="402" height="536"/>
+                                <rect key="frame" x="0.0" y="65" width="402" height="600"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <imageView key="tableFooterView" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="x1l-1x-XRx">
@@ -128,14 +128,6 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="QDW-5L-fih">
-                                <rect key="frame" x="13" y="71" width="31" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button" image="CollectionIcon"/>
-                                <connections>
-                                    <action selector="onSwapViewBarButtonTouched:" destination="Ohg-Ui-cQb" eventType="touchUpInside" id="fma-fg-GDb"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -144,7 +136,6 @@
                         <outlet property="collectionView" destination="pd5-7e-f0J" id="C48-Vf-ctA"/>
                         <outlet property="movieSearchBar" destination="Bj6-02-xBV" id="cPc-P6-JVM"/>
                         <outlet property="networkErrorView" destination="fpA-vr-vj9" id="kmW-jP-K6i"/>
-                        <outlet property="swapViewBarButton" destination="QDW-5L-fih" id="bXj-T2-KJb"/>
                         <outlet property="tableView" destination="qL1-Xa-513" id="P7T-Xu-tD0"/>
                     </connections>
                 </viewController>
@@ -229,7 +220,4 @@
             <point key="canvasLocation" x="1233" y="-892"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="CollectionIcon" width="120" height="120"/>
-    </resources>
 </document>
