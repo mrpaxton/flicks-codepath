@@ -95,7 +95,7 @@ class MoviesTabViewController: UIViewController {
         navigationItem.rightBarButtonItem = searchButtonItem
         
         //preare button for the left navigationitem's bar item button and add negative spacer
-        let tableIcon = UIImage(named: "TableIcon")
+        let tableIcon = UIImage(named: "CollectionIcon")
         swapViewButton = UIButton(type: UIButtonType.Custom)
         swapViewButton.addTarget(self,
             action: "onSwapViewBarButtonTouched:", forControlEvents: .TouchUpInside)
@@ -303,7 +303,6 @@ extension MoviesTabViewController: UITableViewDataSource, UITableViewDelegate {
         let imageUrl = NSURL(string: baseUrl + (posterPath ?? "") )
         let request = NSURLRequest(URL: imageUrl!)
         let placeholderImage = UIImage(named: "MovieHolder")
-        //** cell.cellImageView.setImageWithURL(imageUrl!) - from video, without fade-in effect
         
         let movieCell = fadeInImageOnNetworkCall(request, placeholderImage: placeholderImage!, duration: 0.15, cell: cell) as MovieCell!
         
