@@ -136,9 +136,29 @@ class MoviesTabViewController: UIViewController {
     
     //private helper: setup data of movies from api call
     private func setupMoviesData() {
-        
-        let (request, session) = prepareNetworkRequestSession()
+        //call the movie endpoint
+        let (request, session) = prepareMovieRequestSession()
+        networkCall(request, session: session, success: { (dataDict : NSDictionary? ) -> () in
+            let movies = dataDict!["results"] as! [NSDictionary]?
+            for movieDict in movies! {
+                //call the movieInfo endpoint
+                let (infoRequest, infoSession) = self.prepareMovieInfoRequestSession(movieDict["id"] as! Int)
+                self.networkCall(infoRequest, session: infoSession, success: { (movieInfoDict: NSDictionary?) -> () in
+                    self.movieDictsToModel(movieDict, movieInfo: movieInfoDict!, success: { (currentMovie: Movie) -> () in
+                        self.movieList.append( currentMovie )
+                        self.filteredMovies.append( currentMovie )
+                        //print(self.filteredMovies[0])
+                        self.refreshMovieData()
+                    })
+                })
+            }
+            
+        })
+    }
+    
+    private func networkCall(request: NSURLRequest, session: NSURLSession, success: (NSDictionary?) -> () ) {
         SwiftLoader.show(title: "Loading...", animated: true)
+        
         let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
             completionHandler: { (dataOrNil, response, error) in
                 //delay to see the effect on the simulator
@@ -146,13 +166,7 @@ class MoviesTabViewController: UIViewController {
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
-                            let movies = responseDictionary["results"] as? [NSDictionary]
-                            for movie in movies! {
-                                let currentMovie = self.movieDictToModel(movie)
-                                self.movieList.append( currentMovie )
-                                self.filteredMovies.append( currentMovie )
-                            }
-                            self.refreshMovieData()
+                            success( responseDictionary )
                     }
                 }
                 if error != nil {
@@ -163,7 +177,7 @@ class MoviesTabViewController: UIViewController {
     }
     
     //private helper: handle network call
-    private func prepareNetworkRequestSession() -> (NSURLRequest, NSURLSession) {
+    private func prepareMovieRequestSession() -> (NSURLRequest, NSURLSession) {
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
         let request = NSURLRequest(URL: url!)
@@ -175,15 +189,61 @@ class MoviesTabViewController: UIViewController {
         return (request, session)
     }
     
-    private func movieDictToModel(movie: NSDictionary) -> Movie {
+    //movieInfo network request: addtional data includes budget, revenues, duration, etc
+    private func prepareMovieInfoRequestSession(movieId: Int) -> (NSURLRequest, NSURLSession) {
+        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(movieId)?api_key=\(apiKey)")
+        let request = NSURLRequest(URL: url!)
+        let session = NSURLSession(
+            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+            delegate:nil,
+            delegateQueue:NSOperationQueue.mainQueue()
+        )
+        return (request, session)
+    }
+    
+    //movieCredits network request: addtional data includes actors and actresses
+    private func prepareCreditsRequestSession(movieId: Int) -> (NSURLRequest, NSURLSession) {
+        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(movieId)/credits?api_key=\(apiKey)")
+        let request = NSURLRequest(URL: url!)
+        let session = NSURLSession(
+            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+            delegate:nil,
+            delegateQueue:NSOperationQueue.mainQueue()
+        )
+        return (request, session)
+    }
+    
+    private func movieDictsToModel(movie: NSDictionary, movieInfo: NSDictionary, success:(Movie) -> () )  {
         let id = movie["id"] as! Int
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
         let posterPath = movie["poster_path"] as? String
         let voteAverage = movie["vote_average"] as? Float
         let releaseDate = movie["release_date"] as? NSDate
-        return Movie( id: id, title: title, overview: overview, posterPath: posterPath,
-            voteAverage: voteAverage, releaseDate: releaseDate)
+        let isAdult = movie["adult"] as? Bool
+        
+        let revenue = movieInfo["revenue"] as? Float
+        let duration = movieInfo["runtime"] as? Int
+        let budget = Float( (movieInfo["budget"] as? Int)! )
+        let genres = (movieInfo.valueForKey("genres"))!.valueForKeyPath("name") as? [String]
+        
+        
+        let (request, session) = prepareCreditsRequestSession(id)
+        networkCall(request, session: session, success:{ (movieCredits: NSDictionary?) -> Void in
+            let casts = movieCredits!.valueForKeyPath("cast")
+            let celebsData = casts.map{ $0 as! [NSDictionary] }
+            let celebs = celebsData!.map{
+                Celeb( name: $0["name"]! as? String,
+                    character: $0["character"]! as? String,
+                    profilePath: $0["profile_path"]! as? String )
+            }
+            let movie =  Movie( id: id, title: title, overview: overview, posterPath: posterPath,
+                voteAverage: voteAverage, releaseDate: releaseDate, isAdult: isAdult, revenue: revenue,
+                duration: duration, budget: budget, genres: genres, casts: celebs)
+            success(movie)
+        })
     }
     
     //private helper: setup and config a SwiftLoader progress bar
@@ -247,6 +307,7 @@ class MoviesTabViewController: UIViewController {
                 }, failure: nil)
             return movieCell as? T
         }
+
         return nil
     }
     
@@ -277,6 +338,7 @@ class MoviesTabViewController: UIViewController {
                 self.tableView.indexPathForCell((sender as? MovieCell)!)!.row
             
             if let showDetailsVC = segue.destinationViewController as? ShowDetailsViewController {
+                print(filteredMovies[chosenIndex])
                 showDetailsVC.item = filteredMovies[chosenIndex]
             }
         }

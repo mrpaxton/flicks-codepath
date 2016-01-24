@@ -16,6 +16,12 @@ class ShowDetailsViewController: UIViewController {
     @IBOutlet weak var poster: UIImageView?
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var movieScrollView: UIScrollView!
+    
+    
+    @IBOutlet weak var castOneImage: UIImageView!
+    @IBOutlet weak var revenueLabel: UILabel!
+    @IBOutlet weak var voteAverageLabel: UILabel!
+    
     var item: Movie?
     
     override func viewDidLoad() {
@@ -28,6 +34,11 @@ class ShowDetailsViewController: UIViewController {
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
         
+        
+        //more details about the movie
+        revenueLabel.text =  String(item?.revenue! ?? 0.0)
+        voteAverageLabel.text = String(item!.voteAverage! ?? 0.0)
+        castOneImage.setImageWithURL(NSURL(string: baseUrl + (item?.casts?[0].profilePath)!)!) //found nil while unwrapping
         //load low resolution image first then larger image
         let baseUrlSmall = "http://image.tmdb.org/t/p/w92"
         let imageUrlSmall = NSURL(string: baseUrlSmall + posterPath)

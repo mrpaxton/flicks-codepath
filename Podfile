@@ -6,5 +6,6 @@ use_frameworks!
 target 'MovieViewer' do
     pod 'AFNetworking'
     pod 'SwiftLoader'
+    pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
 end
 
