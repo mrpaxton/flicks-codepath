@@ -234,11 +234,15 @@ class MoviesTabViewController: UIViewController {
         networkCall(request, session: session, success:{ (movieCredits: NSDictionary?) -> Void in
             let casts = movieCredits!.valueForKeyPath("cast")
             let celebsData = casts.map{ $0 as! [NSDictionary] }
-            let celebs = celebsData!.map{
-                Celeb( name: $0["name"]! as? String,
-                    character: $0["character"]! as? String,
-                    profilePath: $0["profile_path"]! as? String )
+            var celebs: [Celeb]? = nil
+            if celebsData != nil {
+                celebs = celebsData!.map{
+                    Celeb( name: $0["name"]! as? String,
+                        character: $0["character"]! as? String,
+                        profilePath: $0["profile_path"]! as? String )
+                }
             }
+            
             let movie =  Movie( id: id, title: title, overview: overview, posterPath: posterPath,
                 voteAverage: voteAverage, releaseDate: releaseDate, isAdult: isAdult, revenue: revenue,
                 duration: duration, budget: budget, genres: genres, casts: celebs)

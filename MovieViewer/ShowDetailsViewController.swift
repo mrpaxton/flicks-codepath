@@ -8,37 +8,62 @@
 
 import UIKit
 
-class ShowDetailsViewController: UIViewController {
-
+class ShowDetailsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
    
+    @IBOutlet weak var celebCollectionView: UICollectionView!
     @IBOutlet weak var showTitle: UILabel?
     @IBOutlet weak var showOverview: UILabel?
     @IBOutlet weak var poster: UIImageView?
     @IBOutlet weak var infoView: UIView!
+    @IBOutlet weak var duration: UILabel!
     @IBOutlet weak var movieScrollView: UIScrollView!
-    
-    
-    @IBOutlet weak var castOneImage: UIImageView!
-    @IBOutlet weak var revenueLabel: UILabel!
     @IBOutlet weak var voteAverageLabel: UILabel!
+    @IBOutlet weak var genresTextLabel: UILabel!
     
     var item: Movie?
     
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return (item?.casts?.count)!
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CelebCollectionCell", forIndexPath: indexPath) as! CelebCollectionCell
+        let celeb = item?.casts![indexPath.row]
+        return celebToCollectionViewCell(celeb!, cell: cell)
+    }
+    
+    func celebToCollectionViewCell(celeb: Celeb, cell: CelebCollectionCell) -> UICollectionViewCell {
+        let characterName = celeb.character
+        let name = celeb.name
+        let celebProfilePath = celeb.profilePath ?? ""
+        let baseUrl = "http://image.tmdb.org/t/p/w500"
+        let imageUrl = NSURL(string: baseUrl + celebProfilePath)
+        
+        //set to the cell
+        cell.characterLabel.text = characterName
+        cell.celebNameLabel.text = name
+        cell.celebImageView.setImageWithURL( imageUrl! )
+        return cell
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        movieScrollView.contentSize = CGSizeMake(400, 2000)
+        celebCollectionView.dataSource = self
+        celebCollectionView.delegate = self
 
         // Do any additional setup after loading the view.
         showTitle!.text = item?.title
         showOverview!.text = item?.overview
+        
+        //more details about the movie
+        duration.text =  String(item?.duration! ?? 0)
+        voteAverageLabel.text =  String( roundFloat( item!.voteAverage! ?? 0.0 ))
+        
+        //castOneImage.setImageWithURL(NSURL(string: baseUrl + (item?.casts?[0].profilePath)!)!) //found nil while unwrapping
         let posterPath = item?.posterPath ?? ""
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
-        
-        
-        //more details about the movie
-        revenueLabel.text =  String(item?.revenue! ?? 0.0)
-        voteAverageLabel.text = String(item!.voteAverage! ?? 0.0)
-        castOneImage.setImageWithURL(NSURL(string: baseUrl + (item?.casts?[0].profilePath)!)!) //found nil while unwrapping
         //load low resolution image first then larger image
         let baseUrlSmall = "http://image.tmdb.org/t/p/w92"
         let imageUrlSmall = NSURL(string: baseUrlSmall + posterPath)
@@ -78,6 +103,10 @@ class ShowDetailsViewController: UIViewController {
                 self.poster!.image = UIImage(named: "MovieHolder")
             }
         )
+    }
+    
+    func roundFloat(value: Float) -> Float {
+        return roundf(value * 100) / 100
     }
 
     override func didReceiveMemoryWarning() {
