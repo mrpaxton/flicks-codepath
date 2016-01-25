@@ -19,7 +19,6 @@
 		D0A530781C3E643C00CDF636 /* MovieCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A530771C3E643C00CDF636 /* MovieCollectionCell.swift */; };
 		D0DB54A81C424D92001C5197 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DB54A71C424D92001C5197 /* Movie.swift */; };
 		D0E43A941C425F730045534D /* ShowDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E43A931C425F730045534D /* ShowDetailsViewController.swift */; };
-		D0FA46D01C55663300AFBF25 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FA46CF1C55663300AFBF25 /* NetworkManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,7 +38,6 @@
 		D0A530771C3E643C00CDF636 /* MovieCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCollectionCell.swift; sourceTree = "<group>"; };
 		D0DB54A71C424D92001C5197 /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		D0E43A931C425F730045534D /* ShowDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowDetailsViewController.swift; sourceTree = "<group>"; };
-		D0FA46CF1C55663300AFBF25 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +90,6 @@
 		D0488F181C3C937000A17EF5 /* MovieViewer */ = {
 			isa = PBXGroup;
 			children = (
-				D0FA46CE1C55661600AFBF25 /* Network */,
 				D0FA46CD1C55660400AFBF25 /* Models */,
 				D0488F2D1C3C96F100A17EF5 /* Views */,
 				D0488F191C3C937000A17EF5 /* AppDelegate.swift */,
@@ -123,14 +120,6 @@
 				D0DB54A71C424D92001C5197 /* Movie.swift */,
 			);
 			name = Models;
-			sourceTree = "<group>";
-		};
-		D0FA46CE1C55661600AFBF25 /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				D0FA46CF1C55663300AFBF25 /* NetworkManager.swift */,
-			);
-			name = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -261,7 +250,6 @@
 				D09CE5A31C55B1020014D1CA /* CelebCollectionCell.swift in Sources */,
 				D0A530781C3E643C00CDF636 /* MovieCollectionCell.swift in Sources */,
 				D0488F1A1C3C937000A17EF5 /* AppDelegate.swift in Sources */,
-				D0FA46D01C55663300AFBF25 /* NetworkManager.swift in Sources */,
 				D04D23A21C419BB9004EE84A /* ColorExtension.swift in Sources */,
 				D04D23A01C419775004EE84A /* MoviesTabViewController.swift in Sources */,
 				D0488F2F1C3C970C00A17EF5 /* MovieCell.swift in Sources */,
