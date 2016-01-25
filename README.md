@@ -27,14 +27,36 @@ The following **additional** features are implemented:
 - [x] Cancel button when the SearchBar is active
 - [x] ScrollView for the detail view of the selected movie
 
-- [x] User can touch the cell and see the detail view of the movie(wk2-required)
-- [x] A tab bar that includes **Now Playing** or **Top Rated**(wk2-required)
-- [ ] Customize the selection effect of the cell(wk2)
+# Project 2 - *Movie Viewer(continued)*
 
+**Flicks** is a movies app displaying box office and top rental DVDs using [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-- [ ] For the large poster, load the low resolution image first and then switch to the high resolution image when complete.(wk2)
-- [ ] Customize the navigation bar.(wk2)
- 
+Time spent: **20** hours spent in total
+
+## User Stories
+
+The following **required** functionality is completed:
+
+- [x] User can view movie details by tapping on a cell.
+- [x] User can select from a tab bar for either **Now Playing** or **Top Rated** movies.
+- [x] Customize the selection effect of the cell.
+
+The following **optional** features are implemented:
+
+- [x] For the large poster, load the low resolution image first and then switch to the high resolution image when complete.
+- [x] Customize the navigation bar.
+
+The following **additional** features are implemented:
+
+- [x] Use can view the cast associated with a movie
+- [x] User can see a basic movie stats(duration, genres, and vote average) on top of the detail view
+- [x] Search bar on the navigation bar
+- [x] Customized toggle icon bar item to change between table view and collection view
+
+Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
+
+1. Asynchronous network calls
+2. Refactoring 400+ lines of codes in a view controller in a professional way
 
 ## Video Walkthrough 
 
