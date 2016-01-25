@@ -45,10 +45,11 @@ class ShowDetailsViewController: UIViewController, UICollectionViewDataSource, U
         cell.celebImageView.setImageWithURL( imageUrl! )
         return cell
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        movieScrollView.contentSize = CGSizeMake(400, 2000)
+        
         celebCollectionView.dataSource = self
         celebCollectionView.delegate = self
 
@@ -57,14 +58,15 @@ class ShowDetailsViewController: UIViewController, UICollectionViewDataSource, U
         showOverview!.text = item?.overview
         
         //more details about the movie
-        duration.text =  String(item?.duration! ?? 0)
+        duration.text =  String(item?.duration! ?? 0) + " mins"
         voteAverageLabel.text =  String( roundFloat( item!.voteAverage! ?? 0.0 ))
+        genresTextLabel.text = item?.genres?.joinWithSeparator(", ")
         
-        //castOneImage.setImageWithURL(NSURL(string: baseUrl + (item?.casts?[0].profilePath)!)!) //found nil while unwrapping
+        
+        //load low resolution image first then larger image
         let posterPath = item?.posterPath ?? ""
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
-        //load low resolution image first then larger image
         let baseUrlSmall = "http://image.tmdb.org/t/p/w92"
         let imageUrlSmall = NSURL(string: baseUrlSmall + posterPath)
         let smallImageRequest = NSURLRequest(URL: imageUrlSmall!)
@@ -74,7 +76,7 @@ class ShowDetailsViewController: UIViewController, UICollectionViewDataSource, U
         
         //configure movieScrollView
         movieScrollView.contentSize = CGSize(width: movieScrollView.frame.size.width,
-            height: infoView.frame.origin.y + infoView.frame.size.height)
+            height: infoView.frame.origin.y + infoView.frame.size.height + 1000)
         showOverview!.sizeToFit()
     }
     
